@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "build:static": "node scripts/build-static.mjs",
+    "serve:static": "python3 -m http.server 8000 --directory _site"
+  }
+}

@@ -1,0 +1,57 @@
+---
+layout: default
+title: Blog
+permalink: /blog/
+description: Research notes, paper reading logs, tutorials, and academic blog posts by Eric Li.
+---
+
+<div class="section pt-5 page-hero-wall">
+  <div class="container is-max-desktop px-5">
+    <div class="content" style="max-width: 90%; margin: 0 auto;">
+      <h1 class="title is-2 mb-5">Blog</h1>
+
+      <div class="blog-category-grid">
+        <a class="blog-category-card" href="{{ '/blog/categories/deep-learning/' | relative_url }}">
+          <span class="blog-category-kicker">Category</span>
+          <strong>Deep Learning</strong>
+          <span>LLMs, neural networks, architectures, and technical evolution notes.</span>
+        </a>
+        <a class="blog-category-card" href="{{ '/blog/categories/statistics-ml-theory/' | relative_url }}">
+          <span class="blog-category-kicker">Category</span>
+          <strong>Statistics & ML Theory</strong>
+          <span>Statistical learning, theory, uncertainty, and principled evaluation.</span>
+        </a>
+        <a class="blog-category-card" href="{{ '/blog/categories/paper-reading/' | relative_url }}">
+          <span class="blog-category-kicker">Category</span>
+          <strong>Paper Reading</strong>
+          <span>Paper notes, summaries, and reading maps for new directions.</span>
+        </a>
+        <a class="blog-category-card" href="{{ '/blog/categories/research-notes/' | relative_url }}">
+          <span class="blog-category-kicker">Category</span>
+          <strong>Research Notes</strong>
+          <span>Working notes, experiment logs, and Obsidian-to-blog drafts.</span>
+        </a>
+      </div>
+
+      <h2 class="title is-4 mt-6 mb-4">Recent Posts</h2>
+      <div class="publications-container">
+        {% for post in site.posts %}
+        <a href="{{ post.url | relative_url }}" class="publication-box-link">
+          <div class="post-item">
+            <div class="post-title">
+              <span class="paper-link">{{ post.title }}</span>
+            </div>
+            <div class="post-meta">
+              {{ post.date | date: "%b %-d, %Y" }}
+              {% if post.tags and post.tags.size > 0 %}
+              · {{ post.tags | join: ", " }}
+              {% endif %}
+            </div>
+            <p>{{ post.summary | default: post.excerpt | strip_html | truncate: 220 }}</p>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>

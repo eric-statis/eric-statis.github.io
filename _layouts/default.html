@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% if page.title %}{{ page.title }} - {% endif %}{{ site.title }} | Academic Homepage</title>
+  <meta name="description" content="{{ page.description | default: site.description | strip_html | normalize_whitespace }}">
+  <meta name="author" content="{{ site.title }}">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="{{ page.url | absolute_url }}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+  <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']]
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  {% feed_meta %}
+  {% seo title=false %}
+</head>
+<body>
+  <nav class="navbar is-light" role="navigation" aria-label="main navigation">
+    <div class="container" style="max-width: 900px; margin: 0 auto;">
+      <div class="navbar-brand">
+        <a class="navbar-item" href="{{ '/' | relative_url }}">
+          <strong>{{ site.title }}</strong>
+        </a>
+
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+
+      <div id="navbarMenu" class="navbar-menu">
+        <div class="navbar-end">
+          <a class="navbar-item {% if page.url == '/' %}is-active{% endif %}" href="{{ '/' | relative_url }}">About</a>
+          <a class="navbar-item {% if page.url == '/publications/' %}is-active{% endif %}" href="{{ '/publications/' | relative_url }}">Publications</a>
+          <a class="navbar-item {% if page.url contains '/blog/' %}is-active{% endif %}" href="{{ '/blog/' | relative_url }}">Blog</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    {{ content }}
+  </main>
+
+  <footer class="footer">
+    <div class="container" style="max-width: 900px; margin: 0 auto;">
+      <div class="content has-text-centered">
+        <p>
+          © {{ 'now' | date: "%Y" }} {{ site.title }}. Created & maintained with Jekyll and Bulma.
+          <br>
+          The website content is licensed <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY NC SA 4.0</a>.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="{{ '/assets/js/main.js' | relative_url }}"></script>
+</body>
+</html>

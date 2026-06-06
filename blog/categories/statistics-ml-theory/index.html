@@ -1,0 +1,29 @@
+---
+layout: default
+title: Statistics & ML Theory
+permalink: /blog/categories/statistics-ml-theory/
+description: Statistics and machine learning theory notes by Eric Li.
+---
+
+<div class="section pt-5 page-hero-wall">
+  <div class="container is-max-desktop px-5">
+    <div class="content" style="max-width: 90%; margin: 0 auto;">
+      <p><a href="{{ '/blog/' | relative_url }}">← Back to Blog</a></p>
+      <h1 class="title is-2 mb-5">Statistics & ML Theory</h1>
+      <div class="publications-container">
+        {% assign category_posts = site.posts | where_exp: "post", "post.categories contains 'Statistics & ML Theory'" %}
+        {% for post in category_posts %}
+        <a href="{{ post.url | relative_url }}" class="publication-box-link">
+          <div class="post-item">
+            <div class="post-title"><span class="paper-link">{{ post.title }}</span></div>
+            <div class="post-meta">{{ post.date | date: "%b %-d, %Y" }} · {{ post.tags | join: ", " }}</div>
+            <p>{{ post.summary | default: post.excerpt | strip_html | truncate: 220 }}</p>
+          </div>
+        </a>
+        {% else %}
+        <p>No posts in this category yet.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>

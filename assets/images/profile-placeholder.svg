@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Profile photo placeholder</title>
+  <desc id="desc">A simple academic profile image placeholder with the initials EL.</desc>
+  <rect width="512" height="512" fill="#f0eee7"/>
+  <circle cx="256" cy="196" r="78" fill="#dedbd2"/>
+  <path d="M116 432c18-83 72-128 140-128s122 45 140 128" fill="#dedbd2"/>
+  <text x="256" y="478" text-anchor="middle" font-family="Gill Sans, Arial, sans-serif" font-size="46" font-weight="700" fill="#8c1515">EL</text>
+</svg>
