@@ -118,7 +118,6 @@ description: Eric Li - academic homepage with research, publications, blog posts
         <div class="visitor-map-copy">
           <span class="visitor-map-kicker">MapMyVisitors</span>
           <p>Live visitor map for eric-statis.github.io, showing approximate locations of recent visitors.</p>
-          <a href="https://mapmyvisitors.com/web/1c56f" target="_blank" rel="noopener noreferrer" class="simple-link">view map</a>
         </div>
       </div>
     </div>
