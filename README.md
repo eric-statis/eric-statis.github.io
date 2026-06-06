@@ -98,5 +98,3 @@ eric-statis.github.io
 ```
 
 Push these files to the repository root. GitHub Pages will build the Jekyll site automatically.
-
-Before deployment, replace `https://eric-statis.github.io` in `_config.yml` with the real site URL.
