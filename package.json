@@ -1,6 +1,7 @@
 {
   "scripts": {
     "build:static": "node scripts/build-static.mjs",
+    "build:docs": "node scripts/build-static.mjs && rm -rf docs && cp -R _site docs && touch docs/.nojekyll && find docs -name '.DS_Store' -delete",
     "serve:static": "python3 -m http.server 8000 --directory _site"
   }
 }

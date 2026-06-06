@@ -97,4 +97,24 @@ Create a GitHub repository named:
 eric-statis.github.io
 ```
 
-Push these files to the repository root. GitHub Pages will build the Jekyll site automatically.
+Build the static site into `docs/`:
+
+```bash
+npm run build:docs
+```
+
+Push these files to the repository root. In GitHub, open:
+
+```text
+Settings → Pages
+```
+
+Use:
+
+```text
+Source: Deploy from a branch
+Branch: main
+Folder: /docs
+```
+
+GitHub Pages will publish the prebuilt static site from `docs/`.
