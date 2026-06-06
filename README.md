@@ -118,3 +118,16 @@ Folder: /docs
 ```
 
 GitHub Pages will publish the prebuilt static site from `docs/`.
+
+## Visitor Map
+
+The homepage has a `Visitors` section prepared for MapMyVisitors.
+
+1. Open `https://mapmyvisitors.com/add`.
+2. Enter `https://eric-statis.github.io/`.
+3. Verify the account and choose the widget type.
+4. Copy the code from `Get Code`.
+5. Paste it into the `visitor-map-embed` block in `index.md`.
+6. Run `npm run build:docs`, commit, and push.
+
+MapMyVisitors processes visitor IP addresses to show approximate locations, so keep the service's privacy requirements in mind before enabling the live widget.
