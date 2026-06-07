@@ -38,6 +38,7 @@
     <ul class="notes-menu">
       <li><a href="/notes/" class="active">Posts</a></li>
       <li><a href="/notes/archives/" class="">Archive</a></li>
+      <li><a href="/notes/categories/" class="">Categories</a></li>
       <li><a href="/notes/search/" class="">Search</a></li>
       <li><a href="/notes/tags/" class="">Tags</a></li>
       <li><a href="/" class="">Home</a></li>
@@ -48,7 +49,7 @@
 <article class="notes-article">
   <header class="notes-post-header">
     <h1>模型训练与推理显存计算总结</h1>
-    <p>Date: Jun 6, 2026 | Estimated Reading Time: 9 min | Author: Eric Li</p>
+    <p>Date: Jun 6, 2026 | Categories: Research Notes | Estimated Reading Time: 9 min | Author: Eric Li</p>
   </header>
   <section class="notes-article-content">
     <blockquote><p><strong>校订说明</strong>：本文中的显存数字用于快速估算。实际占用会受到框架实现、并行策略、optimizer dtype、activation checkpointing、FlashAttention、quantization metadata、CUDA workspace 等因素影响。文中 <code>GB</code> 主要按十进制近似口径使用；按二进制口径可理解为 <code>GiB</code>，数值会略有差异。</p></blockquote>
