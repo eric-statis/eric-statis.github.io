@@ -344,7 +344,7 @@ function notesShell({ title, description, active, content }) {
   <meta name="author" content="${site.title}">
   <meta name="robots" content="index, follow">
   <link rel="stylesheet" href="/assets/css/main.css">
-  <link rel="stylesheet" href="/assets/css/notes.css?v=20260607">
+  <link rel="stylesheet" href="/assets/css/notes.css?v=20260607-2">
   <script>
     window.MathJax = {
       tex: {
