@@ -535,6 +535,39 @@ p {
   transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
+.notes-portal-card {
+  display: block;
+  margin: 0 0 1.4rem;
+  padding: 1.2rem 1.25rem;
+  border: 1px solid rgba(140, 21, 21, 0.2);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.84);
+  color: #222;
+  box-shadow: 0 8px 18px rgba(34, 34, 34, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.notes-portal-card:hover {
+  color: #222;
+  background: rgba(255, 255, 255, 0.96);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(34, 34, 34, 0.08);
+}
+
+.notes-portal-card strong {
+  display: block;
+  color: var(--stanford-cardinal);
+  font-size: 1.15rem;
+  margin: 0.25rem 0 0.45rem;
+}
+
+.notes-portal-card span:last-child {
+  display: block;
+  color: #444;
+  font-size: 0.96rem;
+  line-height: 1.55;
+}
+
 .blog-category-card:hover {
   color: #222;
   background: rgba(255, 255, 255, 0.92);
@@ -773,4 +806,398 @@ p {
     font-size: 1.6rem;
   }
 
+}
+
+/* PaperMod-style notes subsite */
+.notes-site {
+  --notes-theme: #ffffff;
+  --notes-entry: #ffffff;
+  --notes-primary: #1d1e20;
+  --notes-secondary: #5f6065;
+  --notes-tertiary: #f2f2f3;
+  --notes-content: #333438;
+  --notes-border: #e5e5e6;
+  --notes-code-bg: #f5f5f5;
+  min-height: 100vh;
+  margin: 0;
+  background: var(--notes-theme);
+  color: var(--notes-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+}
+
+.notes-site.dark {
+  --notes-theme: #1d1e20;
+  --notes-entry: #2e2e33;
+  --notes-primary: #dadadb;
+  --notes-secondary: #9b9c9d;
+  --notes-tertiary: #414244;
+  --notes-content: #c4c4c5;
+  --notes-border: #333333;
+  --notes-code-bg: #37383e;
+}
+
+.notes-site a {
+  color: inherit;
+}
+
+.notes-header {
+  border-bottom: 1px solid var(--notes-border);
+}
+
+.notes-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: 880px;
+  min-height: 64px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.notes-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.45rem;
+  font-weight: 700;
+}
+
+.notes-logo a:hover,
+.notes-menu a:hover,
+.notes-social-icons a:hover,
+.notes-footer a:hover {
+  color: var(--notes-secondary);
+}
+
+#notes-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--notes-primary);
+  cursor: pointer;
+  font-size: 1.05rem;
+}
+
+#notes-theme-toggle:hover {
+  background: var(--notes-tertiary);
+}
+
+.notes-site.dark .notes-moon,
+.notes-site:not(.dark) .notes-sun {
+  display: none;
+}
+
+.notes-menu {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-x: auto;
+}
+
+.notes-menu a {
+  display: block;
+  padding: 0.45rem 0.62rem;
+  border-radius: 6px;
+  color: var(--notes-primary);
+  font-size: 0.98rem;
+}
+
+.notes-menu a.active,
+.notes-menu a:hover {
+  background: var(--notes-tertiary);
+}
+
+.notes-main {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 30px 24px 64px;
+}
+
+.notes-home-info,
+.notes-post-entry {
+  position: relative;
+  margin-bottom: 24px;
+  padding: 26px;
+  border: 1px solid var(--notes-border);
+  border-radius: 8px;
+  background: var(--notes-entry);
+}
+
+.notes-home-info {
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.notes-entry-header h1,
+.notes-entry-header h2,
+.notes-page-header h1,
+.notes-archive-year h2,
+.notes-post-header h1 {
+  margin: 0;
+  color: var(--notes-primary);
+  letter-spacing: 0;
+}
+
+.notes-entry-header h1 {
+  font-size: 2.35rem;
+  line-height: 1.22;
+}
+
+.notes-entry-header h2 {
+  font-size: 1.55rem;
+  line-height: 1.35;
+}
+
+.notes-entry-content {
+  margin-top: 0.75rem;
+  color: var(--notes-content);
+  font-size: 1rem;
+}
+
+.notes-entry-content p {
+  margin: 0;
+}
+
+.notes-entry-footer,
+.notes-post-header p {
+  margin-top: 1rem;
+  color: var(--notes-secondary);
+  font-size: 0.86rem;
+}
+
+.notes-entry-link {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.notes-post-entry:hover {
+  border-color: var(--notes-secondary);
+}
+
+.notes-social-icons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.1rem;
+}
+
+.notes-social-icons a {
+  position: relative;
+  z-index: 2;
+  padding: 0.22rem 0;
+  color: var(--notes-primary);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.notes-page-header {
+  margin: 0 0 24px;
+}
+
+.notes-page-header h1,
+.notes-post-header h1 {
+  font-size: 2.35rem;
+  line-height: 1.25;
+}
+
+.notes-archive-year {
+  margin: 1.75rem 0 2.25rem;
+}
+
+.notes-archive-year h2 {
+  margin-bottom: 0.85rem;
+  font-size: 1.35rem;
+}
+
+.notes-archive-item {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.52rem 0;
+  border-bottom: 1px solid var(--notes-border);
+}
+
+.notes-archive-item span {
+  color: var(--notes-secondary);
+  font-size: 0.92rem;
+}
+
+.notes-archive-item strong {
+  color: var(--notes-primary);
+  font-weight: 500;
+}
+
+.notes-tags-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+.notes-tags-cloud a {
+  padding: 0.38rem 0.65rem;
+  border-radius: 999px;
+  background: var(--notes-tertiary);
+  color: var(--notes-primary);
+}
+
+.notes-tags-cloud sup {
+  margin-left: 0.25rem;
+  color: var(--notes-secondary);
+}
+
+.notes-search-box input {
+  width: 100%;
+  margin-bottom: 1.4rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--notes-border);
+  border-radius: 8px;
+  background: var(--notes-entry);
+  color: var(--notes-primary);
+  font: inherit;
+}
+
+.notes-article {
+  color: var(--notes-content);
+}
+
+.notes-post-header {
+  margin-bottom: 2rem;
+}
+
+.notes-article-content {
+  font-size: 1.03rem;
+  line-height: 1.78;
+}
+
+.notes-article-content h1,
+.notes-article-content h2,
+.notes-article-content h3,
+.notes-article-content h4 {
+  color: var(--notes-primary);
+  letter-spacing: 0;
+}
+
+.notes-article-content h2 {
+  margin-top: 2.2rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--notes-border);
+}
+
+.notes-article-content p,
+.notes-article-content ul,
+.notes-article-content blockquote,
+.notes-article-content .table-container {
+  margin-bottom: 1.15rem;
+}
+
+.notes-article-content blockquote {
+  padding: 0.9rem 1rem;
+  border-left: 4px solid var(--notes-secondary);
+  background: var(--notes-tertiary);
+}
+
+.notes-article-content code {
+  padding: 0.1rem 0.3rem;
+  border-radius: 4px;
+  background: var(--notes-code-bg);
+  color: var(--notes-primary);
+}
+
+.notes-article-content .table-container {
+  overflow-x: auto;
+}
+
+.notes-article-content table {
+  min-width: 720px;
+  border-collapse: collapse;
+}
+
+.notes-article-content th,
+.notes-article-content td {
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--notes-border);
+}
+
+.notes-footer {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 28px 24px;
+  color: var(--notes-secondary);
+  font-size: 0.88rem;
+}
+
+.notes-footer span + span::before {
+  content: "|";
+  margin-right: 0.5rem;
+}
+
+.notes-top-link {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--notes-tertiary);
+  color: var(--notes-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.notes-top-link.is-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+@media screen and (max-width: 720px) {
+  .notes-nav {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 14px 18px;
+  }
+
+  .notes-main {
+    padding: 24px 18px 48px;
+  }
+
+  .notes-home-info,
+  .notes-post-entry {
+    padding: 20px;
+  }
+
+  .notes-entry-header h1,
+  .notes-page-header h1,
+  .notes-post-header h1 {
+    font-size: 1.9rem;
+  }
+
+  .notes-entry-header h2 {
+    font-size: 1.28rem;
+  }
+
+  .notes-archive-item {
+    grid-template-columns: 1fr;
+    gap: 0.1rem;
+  }
 }

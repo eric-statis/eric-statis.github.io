@@ -5,6 +5,7 @@ const root = process.cwd();
 const out = path.join(root, "_site");
 const site = {
   title: "Eric Li",
+  notesTitle: "Eric's Notes",
   email: "lizongxu65@gmail.com",
   url: "https://eric-statis.github.io",
 };
@@ -80,6 +81,39 @@ function inlineMarkdown(text) {
     .replace(/\*([^*]+)\*/g, "<em>$1</em>")
     .replace(/`([^`]+)`/g, "<code>$1</code>")
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+}
+
+function stripMarkdown(text) {
+  return text
+    .replace(/^---[\s\S]*?---/, "")
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/!\[[^\]]*\]\([^)]+\)/g, " ")
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+    .replace(/[#>*_`|[\]()-]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function excerpt(post, maxLength = 280) {
+  const text = stripMarkdown(post.summary || post.body || "");
+  if (text.length <= maxLength) return text;
+  return `${text.slice(0, maxLength).trim()}...`;
+}
+
+function estimateReadingTime(text) {
+  const clean = stripMarkdown(text);
+  const latinWords = clean.match(/[A-Za-z0-9]+/g)?.length || 0;
+  const cjkChars = clean.match(/[\u4e00-\u9fff]/g)?.length || 0;
+  const units = latinWords + Math.ceil(cjkChars / 2);
+  return Math.max(1, Math.ceil(units / 220));
+}
+
+function slugify(value) {
+  return String(value)
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 }
 
 function isTableDivider(line) {
@@ -229,6 +263,7 @@ function nav(active) {
           <a class="navbar-item ${active === "about" ? "is-active" : ""}" href="/">About</a>
           <a class="navbar-item ${active === "publications" ? "is-active" : ""}" href="/publications/">Publications</a>
           <a class="navbar-item ${active === "blog" ? "is-active" : ""}" href="/blog/">Blog</a>
+          <a class="navbar-item ${active === "notes" ? "is-active" : ""}" href="/notes/">Notes</a>
         </div>
       </div>
     </div>
@@ -277,6 +312,70 @@ ${content}
 </html>`;
 }
 
+function notesNav(active = "posts") {
+  const item = (key, href, label) => `<li><a href="${href}" class="${active === key ? "active" : ""}">${label}</a></li>`;
+  return `<header class="notes-header" id="top">
+  <nav class="notes-nav">
+    <div class="notes-logo">
+      <a href="/notes/" title="${site.notesTitle}">${site.notesTitle}</a>
+      <button id="notes-theme-toggle" type="button" title="Toggle theme" aria-label="Toggle theme">
+        <span class="notes-moon">☾</span><span class="notes-sun">☀</span>
+      </button>
+    </div>
+    <ul class="notes-menu">
+      ${item("posts", "/notes/", "Posts")}
+      ${item("archive", "/notes/archives/", "Archive")}
+      ${item("search", "/notes/search/", "Search")}
+      ${item("tags", "/notes/tags/", "Tags")}
+      ${item("home", "/", "Home")}
+    </ul>
+  </nav>
+</header>`;
+}
+
+function notesShell({ title, description, active, content }) {
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>${title ? `${title} - ` : ""}${site.notesTitle}</title>
+  <meta name="description" content="${description || "Research notes by Eric Li."}">
+  <meta name="author" content="${site.title}">
+  <meta name="robots" content="index, follow">
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\\\(', '\\\\)']],
+        displayMath: [['$$', '$$'], ['\\\\[', '\\\\]']],
+        processEscapes: true
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body class="notes-site">
+<script>
+  if (localStorage.getItem("notes-theme") === "dark" || (!localStorage.getItem("notes-theme") && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+    document.body.classList.add("dark");
+  }
+</script>
+${notesNav(active)}
+<main class="notes-main">
+${content}
+</main>
+<footer class="notes-footer">
+  <span>© 2026 <a href="/notes/">${site.notesTitle}</a></span>
+  <span>Built as a minimal research notebook.</span>
+</footer>
+<a href="#top" class="notes-top-link" aria-label="Go to top">▲</a>
+<script src="/assets/js/main.js"></script>
+</body>
+</html>`;
+}
+
 function pageShell(title, body) {
   return `<div class="section pt-5 page-hero-wall">
   <div class="container is-max-desktop px-5">
@@ -314,7 +413,8 @@ const posts = fs.readdirSync(path.join(root, "_posts"))
     const [data, body] = parseFrontMatter(read(path.join("_posts", file)));
     const slug = file.replace(/^\d{4}-\d{2}-\d{2}-/, "").replace(/\.md$/, "");
     const postCategories = Array.isArray(data.categories) ? data.categories : [];
-    return { ...data, categories: postCategories, body, slug, url: `/blog/${slug}/` };
+    const tags = Array.isArray(data.tags) ? data.tags : [];
+    return { ...data, categories: postCategories, tags, body, slug, url: `/blog/${slug}/`, notesUrl: `/notes/posts/${slug}/` };
   })
   .sort((a, b) => String(b.date).localeCompare(String(a.date)));
 
@@ -347,9 +447,131 @@ write("blog/index.html", shell({
   title: "Blog",
   description: "Research notes, paper reading logs, tutorials, and academic blog posts by Eric Li.",
   active: "blog",
-  content: pageShell("Blog", `<div class="blog-category-grid">${categoryCards}</div>
+  content: pageShell("Blog", `<a class="notes-portal-card" href="/notes/">
+  <span class="blog-category-kicker">Separate Notes Site</span>
+  <strong>Eric's Notes</strong>
+  <span>A clean PaperMod-style notebook for research notes, archives, tags, and search.</span>
+</a>
+<div class="blog-category-grid">${categoryCards}</div>
 <h2 class="title is-4 mt-6 mb-4">Recent Posts</h2>
 <div class="publications-container">${postList}</div>`),
+}));
+
+const notesPostList = posts.map((post) => `<article class="notes-post-entry">
+  <a class="notes-entry-link" href="${post.notesUrl}" aria-label="Read ${post.title}"></a>
+  <header class="notes-entry-header"><h2>${post.title}</h2></header>
+  <section class="notes-entry-content"><p>${excerpt(post)}</p></section>
+  <footer class="notes-entry-footer">Date: ${formatDate(post.date)} | Estimated Reading Time: ${estimateReadingTime(post.body)} min | Author: Eric Li</footer>
+</article>`).join("\n\n");
+
+write("notes/index.html", notesShell({
+  title: "",
+  description: "Eric Li's research notes on statistics, machine learning theory, and large language models.",
+  active: "posts",
+  content: `<article class="notes-home-info">
+  <header class="notes-entry-header"><h1>Welcome to Eric's Notes</h1></header>
+  <section class="notes-entry-content">
+    <p>I document research notes on statistics, machine learning theory, large language models, reinforcement learning, causal inference, and off-policy evaluation.</p>
+  </section>
+  <footer class="notes-social-icons">
+    <a href="mailto:${site.email}" title="Email">Email</a>
+    <a href="https://github.com/eric-statis" target="_blank" rel="noopener noreferrer" title="GitHub">GitHub</a>
+    <a href="https://orcid.org/0009-0007-1129-5202" target="_blank" rel="noopener noreferrer" title="ORCID">ORCID</a>
+  </footer>
+</article>
+${notesPostList}`,
+}));
+
+const postsByYear = posts.reduce((acc, post) => {
+  const year = String(post.date).slice(0, 4);
+  acc[year] ||= [];
+  acc[year].push(post);
+  return acc;
+}, {});
+
+write("notes/archives/index.html", notesShell({
+  title: "Archive",
+  description: "Archive of Eric Li's research notes.",
+  active: "archive",
+  content: `<section class="notes-page-header"><h1>Archive</h1></section>
+${Object.entries(postsByYear).sort((a, b) => b[0].localeCompare(a[0])).map(([year, yearPosts]) => `<section class="notes-archive-year">
+  <h2>${year}</h2>
+  ${yearPosts.map((post) => `<a class="notes-archive-item" href="${post.notesUrl}"><span>${formatDate(post.date)}</span><strong>${post.title}</strong></a>`).join("\n")}
+</section>`).join("\n")}`,
+}));
+
+const tagMap = posts.reduce((acc, post) => {
+  for (const tag of post.tags) {
+    acc[tag] ||= [];
+    acc[tag].push(post);
+  }
+  return acc;
+}, {});
+
+const tagList = Object.entries(tagMap).sort((a, b) => a[0].localeCompare(b[0]));
+write("notes/tags/index.html", notesShell({
+  title: "Tags",
+  description: "Tags for Eric Li's research notes.",
+  active: "tags",
+  content: `<section class="notes-page-header"><h1>Tags</h1></section>
+<div class="notes-tags-cloud">
+${tagList.map(([tag, tagPosts]) => `<a href="/notes/tags/${slugify(tag)}/">${tag}<sup>${tagPosts.length}</sup></a>`).join("\n")}
+</div>`,
+}));
+
+for (const [tag, tagPosts] of tagList) {
+  write(`notes/tags/${slugify(tag)}/index.html`, notesShell({
+    title: tag,
+    description: `${tag} notes by Eric Li.`,
+    active: "tags",
+    content: `<section class="notes-page-header"><h1>${tag}</h1><p><a href="/notes/tags/">← All tags</a></p></section>
+${tagPosts.map((post) => `<article class="notes-post-entry">
+  <a class="notes-entry-link" href="${post.notesUrl}" aria-label="Read ${post.title}"></a>
+  <header class="notes-entry-header"><h2>${post.title}</h2></header>
+  <section class="notes-entry-content"><p>${excerpt(post)}</p></section>
+  <footer class="notes-entry-footer">Date: ${formatDate(post.date)} | Estimated Reading Time: ${estimateReadingTime(post.body)} min | Author: Eric Li</footer>
+</article>`).join("\n\n")}`,
+  }));
+}
+
+const searchIndex = JSON.stringify(posts.map((post) => ({
+  title: post.title,
+  url: post.notesUrl,
+  date: formatDate(post.date),
+  tags: post.tags,
+  text: stripMarkdown(`${post.title} ${post.summary || ""} ${post.body}`).slice(0, 1200),
+})));
+
+write("notes/search/index.html", notesShell({
+  title: "Search",
+  description: "Search Eric Li's research notes.",
+  active: "search",
+  content: `<section class="notes-page-header"><h1>Search</h1></section>
+<div class="notes-search-box">
+  <input id="notes-search-input" type="search" placeholder="Search notes..." autocomplete="off">
+</div>
+<div id="notes-search-results" class="notes-search-results"></div>
+<script>
+const notesSearchIndex = ${searchIndex};
+const input = document.getElementById("notes-search-input");
+const results = document.getElementById("notes-search-results");
+function escapeHtml(value) {
+  return String(value).replace(/[&<>'"]/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    "'": "&#39;",
+    '"': "&quot;"
+  }[char]));
+}
+function renderResults(query) {
+  const q = query.trim().toLowerCase();
+  const matches = q ? notesSearchIndex.filter((item) => [item.title, item.text, item.tags.join(" ")].join(" ").toLowerCase().includes(q)) : notesSearchIndex;
+  results.innerHTML = matches.map((item) => '<article class="notes-post-entry"><a class="notes-entry-link" href="' + escapeHtml(item.url) + '" aria-label="Read ' + escapeHtml(item.title) + '"></a><header class="notes-entry-header"><h2>' + escapeHtml(item.title) + '</h2></header><section class="notes-entry-content"><p>' + escapeHtml(item.text.slice(0, 220)) + '...</p></section><footer class="notes-entry-footer">Date: ' + escapeHtml(item.date) + ' | Tags: ' + escapeHtml(item.tags.join(", ")) + '</footer></article>').join("");
+}
+input.addEventListener("input", (event) => renderResults(event.target.value));
+renderResults("");
+</script>`,
 }));
 
 for (const category of categories) {
@@ -380,6 +602,24 @@ for (const post of posts) {
   }));
 }
 
+for (const post of posts) {
+  const content = `<article class="notes-article">
+  <header class="notes-post-header">
+    <h1>${post.title}</h1>
+    <p>Date: ${formatDate(post.date)} | Estimated Reading Time: ${estimateReadingTime(post.body)} min | Author: Eric Li</p>
+  </header>
+  <section class="notes-article-content">
+    ${markdownToHtml(post.body)}
+  </section>
+</article>`;
+  write(`notes/posts/${post.slug}/index.html`, notesShell({
+    title: post.title,
+    description: post.summary,
+    active: "posts",
+    content,
+  }));
+}
+
 write("robots.txt", `User-agent: *
 Allow: /
 
@@ -391,8 +631,13 @@ write("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>
   <url><loc>${site.url}/</loc></url>
   <url><loc>${site.url}/publications/</loc></url>
   <url><loc>${site.url}/blog/</loc></url>
+  <url><loc>${site.url}/notes/</loc></url>
+  <url><loc>${site.url}/notes/archives/</loc></url>
+  <url><loc>${site.url}/notes/search/</loc></url>
+  <url><loc>${site.url}/notes/tags/</loc></url>
 ${categories.map((category) => `  <url><loc>${site.url}/blog/categories/${category.slug}/</loc></url>`).join("\n")}
 ${posts.map((post) => `  <url><loc>${site.url}${post.url}</loc></url>`).join("\n")}
+${posts.map((post) => `  <url><loc>${site.url}${post.notesUrl}</loc></url>`).join("\n")}
 </urlset>
 `);
 

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tags - Eric's Notes</title>
+  <meta name="description" content="Tags for Eric Li's research notes.">
+  <meta name="author" content="Eric Li">
+  <meta name="robots" content="index, follow">
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body class="notes-site">
+<script>
+  if (localStorage.getItem("notes-theme") === "dark" || (!localStorage.getItem("notes-theme") && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+    document.body.classList.add("dark");
+  }
+</script>
+<header class="notes-header" id="top">
+  <nav class="notes-nav">
+    <div class="notes-logo">
+      <a href="/notes/" title="Eric's Notes">Eric's Notes</a>
+      <button id="notes-theme-toggle" type="button" title="Toggle theme" aria-label="Toggle theme">
+        <span class="notes-moon">☾</span><span class="notes-sun">☀</span>
+      </button>
+    </div>
+    <ul class="notes-menu">
+      <li><a href="/notes/" class="">Posts</a></li>
+      <li><a href="/notes/archives/" class="">Archive</a></li>
+      <li><a href="/notes/search/" class="">Search</a></li>
+      <li><a href="/notes/tags/" class="active">Tags</a></li>
+      <li><a href="/" class="">Home</a></li>
+    </ul>
+  </nav>
+</header>
+<main class="notes-main">
+<section class="notes-page-header"><h1>Tags</h1></section>
+<div class="notes-tags-cloud">
+<a href="/notes/tags/deep-learning/">Deep Learning<sup>2</sup></a>
+<a href="/notes/tags/gpt/">GPT<sup>1</sup></a>
+<a href="/notes/tags/gpu-memory/">GPU Memory<sup>1</sup></a>
+<a href="/notes/tags/inference/">Inference<sup>1</sup></a>
+<a href="/notes/tags/llm/">LLM<sup>2</sup></a>
+<a href="/notes/tags/openai/">OpenAI<sup>1</sup></a>
+<a href="/notes/tags/training/">Training<sup>1</sup></a>
+</div>
+</main>
+<footer class="notes-footer">
+  <span>© 2026 <a href="/notes/">Eric's Notes</a></span>
+  <span>Built as a minimal research notebook.</span>
+</footer>
+<a href="#top" class="notes-top-link" aria-label="Go to top">▲</a>
+<script src="/assets/js/main.js"></script>
+</body>
+</html>
