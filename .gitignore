@@ -1,4 +1,5 @@
 _site/
+_private_posts/
 .bundle/
 vendor/
 Gemfile.lock

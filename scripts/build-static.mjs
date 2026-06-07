@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import crypto from "node:crypto";
 
 const root = process.cwd();
 const out = path.join(root, "_site");
@@ -9,6 +10,8 @@ const site = {
   email: "lizongxu65@gmail.com",
   url: "https://eric-statis.github.io",
 };
+const privatePassword = process.env.NOTES_PRIVATE_PASSWORD || "";
+const privateKdfIterations = 210000;
 
 function read(file) {
   return fs.readFileSync(path.join(root, file), "utf8");
@@ -111,6 +114,32 @@ function escapeHtml(value) {
     "'": "&#39;",
     '"': "&quot;",
   }[char]));
+}
+
+function isPrivateValue(value) {
+  return value === true || String(value || "").toLowerCase() === "true";
+}
+
+function base64(buffer) {
+  return Buffer.from(buffer).toString("base64");
+}
+
+function encryptPrivateHtml(html, slug) {
+  if (!privatePassword) {
+    throw new Error(`Post "${slug}" is private. Set NOTES_PRIVATE_PASSWORD before building.`);
+  }
+  const salt = crypto.randomBytes(16);
+  const iv = crypto.randomBytes(12);
+  const key = crypto.pbkdf2Sync(privatePassword, salt, privateKdfIterations, 32, "sha256");
+  const cipher = crypto.createCipheriv("aes-256-gcm", key, iv);
+  const encrypted = Buffer.concat([cipher.update(html, "utf8"), cipher.final()]);
+  const tag = cipher.getAuthTag();
+  return {
+    data: base64(Buffer.concat([encrypted, tag])),
+    iv: base64(iv),
+    salt: base64(salt),
+    iterations: privateKdfIterations,
+  };
 }
 
 function isTableDivider(line) {
@@ -342,7 +371,7 @@ function notesShell({ title, description, active, content }) {
   <meta name="author" content="${site.title}">
   <meta name="robots" content="index, follow">
   <link rel="stylesheet" href="/assets/css/main.css">
-  <link rel="stylesheet" href="/assets/css/notes.css?v=20260607-3">
+  <link rel="stylesheet" href="/assets/css/notes.css?v=20260608-1">
   <script>
     window.MathJax = {
       tex: {
@@ -406,15 +435,25 @@ write("publications/index.html", shell({
   content: pageShell(pubData.title, liquidBasics(pubBody)),
 }));
 
-const posts = fs.readdirSync(path.join(root, "_posts"))
-  .filter((file) => file.endsWith(".md"))
-  .map((file) => {
-    const [data, body] = parseFrontMatter(read(path.join("_posts", file)));
-    const slug = file.replace(/^\d{4}-\d{2}-\d{2}-/, "").replace(/\.md$/, "");
-    const categories = Array.isArray(data.categories) ? data.categories : [];
-    const tags = Array.isArray(data.tags) ? data.tags : [];
-    return { ...data, categories, tags, body, slug, notesUrl: `/notes/posts/${slug}/` };
-  })
+const postSources = [
+  { dir: "_posts", defaultPrivate: false },
+  { dir: "_private_posts", defaultPrivate: true },
+];
+
+const posts = postSources.flatMap((source) => {
+  const sourceDir = path.join(root, source.dir);
+  if (!fs.existsSync(sourceDir)) return [];
+  return fs.readdirSync(sourceDir)
+    .filter((file) => file.endsWith(".md"))
+    .map((file) => {
+      const [data, body] = parseFrontMatter(read(path.join(source.dir, file)));
+      const slug = file.replace(/^\d{4}-\d{2}-\d{2}-/, "").replace(/\.md$/, "");
+      const categories = Array.isArray(data.categories) ? data.categories : [];
+      const tags = Array.isArray(data.tags) ? data.tags : [];
+      const isPrivate = source.defaultPrivate || isPrivateValue(data.private);
+      return { ...data, categories, tags, private: isPrivate, body, slug, notesUrl: `/notes/posts/${slug}/` };
+    });
+})
   .sort((a, b) => String(b.date).localeCompare(String(a.date)));
 
 const collections = readJsonIfExists("notes_collections.json", []);
@@ -456,11 +495,65 @@ function postMeta(post) {
 }
 
 function postCard(post) {
-  return `<article class="notes-post-entry">
+  return `<article class="notes-post-entry${post.private ? " is-private" : ""}">
   <a class="notes-entry-link" href="${post.notesUrl}" aria-label="Read ${escapeHtml(post.title)}"></a>
-  <header class="notes-entry-header"><h2>${escapeHtml(post.title)}</h2></header>
+  <header class="notes-entry-header"><h2>${post.private ? '<span class="notes-lock">Private</span>' : ""}${escapeHtml(post.title)}</h2></header>
   <section class="notes-entry-content"><p>${escapeHtml(excerpt(post))}</p></section>
   <footer class="notes-entry-footer">${postMeta(post)}</footer>
+</article>`;
+}
+
+function privatePostArticle(post) {
+  const encrypted = encryptPrivateHtml(markdownToHtml(post.body), post.slug);
+  return `<article class="notes-article notes-private-article">
+  <header class="notes-post-header">
+    <h1>${escapeHtml(post.title)}</h1>
+    <p>${postMeta(post)}</p>
+  </header>
+  <section class="notes-private-gate">
+    <span class="notes-private-badge">Private note</span>
+    <h2>Password required</h2>
+    <p>This note is encrypted in the static build. Enter the password to unlock it in your browser.</p>
+    <form class="notes-private-form" data-private-form>
+      <input type="password" name="password" autocomplete="current-password" placeholder="Password" required>
+      <button type="submit">Unlock</button>
+    </form>
+    <p class="notes-private-error" data-private-error hidden>Wrong password. Please try again.</p>
+  </section>
+  <section class="notes-article-content notes-private-content" data-private-content hidden></section>
+  <script type="application/json" data-private-payload>${JSON.stringify(encrypted)}</script>
+  <script>
+  (() => {
+    const form = document.querySelector("[data-private-form]");
+    const error = document.querySelector("[data-private-error]");
+    const content = document.querySelector("[data-private-content]");
+    const gate = document.querySelector(".notes-private-gate");
+    const payload = JSON.parse(document.querySelector("[data-private-payload]").textContent);
+    const bytes = (value) => Uint8Array.from(atob(value), (char) => char.charCodeAt(0));
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      error.hidden = true;
+      const password = new FormData(form).get("password");
+      try {
+        const material = await crypto.subtle.importKey("raw", new TextEncoder().encode(password), "PBKDF2", false, ["deriveKey"]);
+        const key = await crypto.subtle.deriveKey(
+          { name: "PBKDF2", salt: bytes(payload.salt), iterations: payload.iterations, hash: "SHA-256" },
+          material,
+          { name: "AES-GCM", length: 256 },
+          false,
+          ["decrypt"]
+        );
+        const decrypted = await crypto.subtle.decrypt({ name: "AES-GCM", iv: bytes(payload.iv) }, key, bytes(payload.data));
+        content.innerHTML = new TextDecoder().decode(decrypted);
+        content.hidden = false;
+        gate.hidden = true;
+        if (window.MathJax?.typesetPromise) window.MathJax.typesetPromise([content]);
+      } catch {
+        error.hidden = false;
+      }
+    });
+  })();
+  </script>
 </article>`;
 }
 
@@ -491,15 +584,20 @@ write("notes/index.html", notesShell({
   description: "Eric Li's research notes on statistics, machine learning theory, and large language models.",
   active: "posts",
   content: `<article class="notes-home-info">
-  <header class="notes-entry-header"><h1>Welcome to Eric's Notes</h1></header>
-  <section class="notes-entry-content">
-    <p>I document research notes on statistics, machine learning theory, large language models, reinforcement learning, causal inference, and off-policy evaluation.</p>
-  </section>
-  <footer class="notes-social-icons">
-    <a href="mailto:${site.email}" title="Email">Email</a>
-    <a href="https://github.com/eric-statis" target="_blank" rel="noopener noreferrer" title="GitHub">GitHub</a>
-    <a href="https://orcid.org/0009-0007-1129-5202" target="_blank" rel="noopener noreferrer" title="ORCID">ORCID</a>
-  </footer>
+  <div>
+    <div class="notes-hero-stickers" aria-hidden="true">
+      <span>📚</span><span>🧠</span><span>☕</span><span>✨</span>
+    </div>
+    <header class="notes-entry-header"><h1>Welcome to Eric's Notes</h1></header>
+    <section class="notes-entry-content">
+      <p>I document research notes on statistics, machine learning theory, large language models, reinforcement learning, causal inference, and off-policy evaluation.</p>
+    </section>
+    <footer class="notes-social-icons">
+      <a href="mailto:${site.email}" title="Email">Email</a>
+      <a href="https://github.com/eric-statis" target="_blank" rel="noopener noreferrer" title="GitHub">GitHub</a>
+      <a href="https://orcid.org/0009-0007-1129-5202" target="_blank" rel="noopener noreferrer" title="ORCID">ORCID</a>
+    </footer>
+  </div>
 </article>
 <section class="notes-card-grid notes-topic-grid">
 ${topicList.map(([topic, topicPosts]) => {
@@ -507,7 +605,6 @@ ${topicList.map(([topic, topicPosts]) => {
   return `<article class="notes-entry-card">
   <a class="notes-entry-link" href="/notes/topics/${slugify(topic)}/" aria-label="Open ${escapeHtml(topic)}"></a>
   <h2>${escapeHtml(topic)}</h2>
-  <p>${topicPosts.length} ${topicPosts.length === 1 ? "post" : "posts"}</p>
   <span>Updated ${formatDate(latest.date)}</span>
 </article>`;
 }).join("\n")}
@@ -568,7 +665,6 @@ ${collectionTypes.map((type) => {
   <a class="notes-entry-link" href="/notes/collections/${type.key}/" aria-label="Open ${escapeHtml(type.title)}"></a>
   <h2>${escapeHtml(type.title)}</h2>
   <p>${escapeHtml(type.description)}</p>
-  <span>${items.length} ${items.length === 1 ? "link" : "links"}</span>
 </article>`;
 }).join("\n")}
 </section>`,
@@ -616,12 +712,7 @@ for (const [tag, tagPosts] of tagList) {
     description: `${tag} notes by Eric Li.`,
     active: "tags",
     content: `<section class="notes-page-header"><h1>${tag}</h1><p><a href="/notes/tags/">← All tags</a></p></section>
-${tagPosts.map((post) => `<article class="notes-post-entry">
-  <a class="notes-entry-link" href="${post.notesUrl}" aria-label="Read ${post.title}"></a>
-  <header class="notes-entry-header"><h2>${post.title}</h2></header>
-  <section class="notes-entry-content"><p>${excerpt(post)}</p></section>
-  <footer class="notes-entry-footer">${postMeta(post)}</footer>
-</article>`).join("\n\n")}`,
+${tagPosts.map(postCard).join("\n\n")}`,
   }));
 }
 
@@ -632,7 +723,7 @@ const searchIndex = JSON.stringify(posts.map((post) => ({
   readingTime: estimateReadingTime(post.body),
   categories: post.categories,
   tags: post.tags,
-  text: stripMarkdown(`${post.title} ${post.summary || ""} ${post.body}`).slice(0, 1200),
+  text: stripMarkdown(`${post.title} ${post.summary || ""} ${post.private ? "" : post.body}`).slice(0, 1200),
 })));
 
 write("notes/search/index.html", notesShell({
@@ -668,6 +759,15 @@ renderResults("");
 }));
 
 for (const post of posts) {
+  if (post.private) {
+    write(`notes/posts/${post.slug}/index.html`, notesShell({
+      title: post.title,
+      description: post.summary,
+      active: "posts",
+      content: privatePostArticle(post),
+    }));
+    continue;
+  }
   const content = `<article class="notes-article">
   <header class="notes-post-header">
     <h1>${post.title}</h1>
