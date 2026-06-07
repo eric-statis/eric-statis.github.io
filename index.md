@@ -113,7 +113,7 @@ description: Eric Li - academic homepage with research, publications, blog posts
       <h2 class="title is-3 mt-6 mb-4">Visitors</h2>
       <div class="visitor-map-card">
         <div class="visitor-map-preview visitor-map-live">
-          <script type="text/javascript" id="mapmyvisitors" src="https://mapmyvisitors.com/map.js?d=xzYZ44gXCb_v-r3HzSfb56N_LhP-RFgFamVgmvwDCYQ&cl=333333&w=620"></script>
+          <script type="text/javascript" id="mapmyvisitors" src="https://mapmyvisitors.com/map.js?d=xzYZ44gXCb_v-r3HzSfb56N_LhP-RFgFamVgmvwDCYQ&cl=333333&co=e7f3f1&w=620"></script>
         </div>
       </div>
     </div>

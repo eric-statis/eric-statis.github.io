@@ -145,4 +145,4 @@ The token appears in the published HTML by design; it identifies the website to 
 
 ## Visitor Map
 
-The homepage `Visitors` section uses MapMyVisitors. A local CSS fallback map is applied behind the widget so visitor dots and pageview text remain visible even when MapMyVisitors' own background image fails to load.
+The homepage `Visitors` section uses MapMyVisitors. The widget keeps MapMyVisitors' own visitor dots and counters, while local CSS centers the card and forces the official pale map background instead of the default deep-blue version.
