@@ -151,12 +151,59 @@
 
       <h2 class="title is-3 mt-6 mb-4">Visitors</h2>
       <div class="visitor-map-card">
-        <div class="visitor-map-preview visitor-map-live">
-          <script type="text/javascript" id="mapmyvisitors" src="https://mapmyvisitors.com/map.js?d=xzYZ44gXCb_v-r3HzSfb56N_LhP-RFgFamVgmvwDCYQ&cl=ffffff&w=a"></script>
+        <div class="visitor-map-preview visitor-map-art" aria-label="Visitor map">
+          <svg viewBox="0 0 960 500" role="img" aria-labelledby="visitor-map-title" preserveAspectRatio="xMidYMid meet">
+            <title id="visitor-map-title">World visitor map</title>
+            <defs>
+              <linearGradient id="visitorOcean" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#d9f0ef"/>
+                <stop offset="52%" stop-color="#eff7f2"/>
+                <stop offset="100%" stop-color="#f7ead7"/>
+              </linearGradient>
+              <filter id="visitorSoftShadow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#8c1515" flood-opacity="0.10"/>
+              </filter>
+            </defs>
+            <rect width="960" height="500" rx="20" fill="url(#visitorOcean)"/>
+            <g class="visitor-map-graticule">
+              <path d="M80 250H880M480 48V452M170 92C260 198 268 314 170 408M790 92C700 198 692 314 790 408M90 150C330 190 630 190 870 150M90 350C330 310 630 310 870 350"/>
+            </g>
+            <g class="visitor-land" filter="url(#visitorSoftShadow)">
+              <path d="M154 148c52-46 141-62 210-25 30 16 48 44 37 71-11 29-54 24-75 48-23 26-6 69-39 87-38 21-91-14-126-41-39-30-73-74-69-108 2-16 25-15 62-32Z"/>
+              <path d="M283 307c22 9 38 33 38 58 0 37-42 71-62 103-23-43-49-86-37-124 7-25 32-49 61-37Z"/>
+              <path d="M437 132c46-24 104-12 135 19 17 17 15 43-7 56-25 15-61-6-80 17-15 18-1 48-20 61-24 16-58-11-79-34-25-27-45-60-34-86 8-19 45-11 85-33Z"/>
+              <path d="M556 180c83-60 232-55 303 20 30 32 19 79-30 95-42 14-83-13-118 5-48 25-50 90-105 95-47 4-82-37-97-82-18-54 1-99 47-133Z"/>
+              <path d="M682 337c36-18 82-9 111 19 29 29 30 71 4 91-28 22-89 9-119-23-29-31-29-70 4-87Z"/>
+              <path d="M501 289c34 11 57 45 52 82-5 35-31 63-48 94-25-38-54-73-55-115-1-36 21-73 51-61Z"/>
+            </g>
+            <g class="visitor-routes">
+              <path d="M263 214C385 128 560 126 702 220"/>
+              <path d="M468 212C535 245 604 276 694 303"/>
+              <path d="M733 292C762 324 779 357 790 397"/>
+            </g>
+            <g class="visitor-points">
+              <g style="--delay: 0s">
+                <circle cx="263" cy="214" r="7"/>
+                <text x="278" y="206">North America</text>
+              </g>
+              <g style="--delay: .25s">
+                <circle cx="468" cy="212" r="7"/>
+                <text x="483" y="204">Europe</text>
+              </g>
+              <g style="--delay: .5s">
+                <circle cx="733" cy="292" r="7"/>
+                <text x="748" y="284">East Asia</text>
+              </g>
+              <g style="--delay: .75s">
+                <circle cx="790" cy="397" r="7"/>
+                <text x="805" y="389">Oceania</text>
+              </g>
+            </g>
+          </svg>
         </div>
         <div class="visitor-map-copy">
-          <span class="visitor-map-kicker">MapMyVisitors</span>
-          <p>Live visitor map for eric-statis.github.io, showing approximate locations of recent visitors.</p>
+          <span class="visitor-map-kicker">Visitor Map</span>
+          <p>A lightweight map view for eric-statis.github.io, showing approximate visitor regions.</p>
         </div>
       </div>
     </div>

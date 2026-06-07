@@ -384,80 +384,73 @@ p {
 
 .visitor-map-preview {
   position: relative;
-  min-height: 210px;
+  min-height: 300px;
   overflow: hidden;
   border-radius: 6px;
   border: 1px solid rgba(140, 21, 21, 0.14);
-  background:
-    radial-gradient(circle at 18% 38%, rgba(140, 21, 21, 0.2) 0 0.5rem, transparent 0.55rem),
-    radial-gradient(circle at 50% 30%, rgba(140, 21, 21, 0.24) 0 0.44rem, transparent 0.5rem),
-    radial-gradient(circle at 74% 44%, rgba(140, 21, 21, 0.22) 0 0.5rem, transparent 0.56rem),
-    linear-gradient(135deg, rgba(190, 225, 223, 0.92), rgba(244, 236, 210, 0.84));
+  background: rgba(255, 255, 255, 0.64);
 }
 
-.visitor-map-live {
+.visitor-map-art {
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0.65rem;
-  background: rgba(255, 255, 255, 0.64);
 }
 
-.visitor-map-live #mapmyvisitors-widget {
-  width: 100% !important;
+.visitor-map-art svg {
+  display: block;
+  width: 100%;
+  min-height: 280px;
 }
 
-.visitor-map-preview::before,
-.visitor-map-preview::after {
-  content: "";
-  position: absolute;
-  inset: 16% 10%;
-  border: 1px solid rgba(98, 13, 13, 0.14);
-  border-radius: 50%;
+.visitor-map-graticule path {
+  fill: none;
+  stroke: rgba(98, 13, 13, 0.12);
+  stroke-width: 1.2;
 }
 
-.visitor-map-preview::after {
-  inset: 30% 3%;
-  transform: rotate(-8deg);
+.visitor-land path {
+  fill: rgba(255, 255, 255, 0.86);
+  stroke: rgba(51, 81, 79, 0.28);
+  stroke-width: 1.2;
 }
 
-.visitor-map-grid {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(98, 13, 13, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(98, 13, 13, 0.08) 1px, transparent 1px);
-  background-size: 42px 42px;
-  mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent);
+.visitor-routes path {
+  fill: none;
+  stroke: rgba(140, 21, 21, 0.28);
+  stroke-dasharray: 5 8;
+  stroke-linecap: round;
+  stroke-width: 2;
 }
 
-.visitor-dot {
-  position: absolute;
-  width: 0.72rem;
-  height: 0.72rem;
-  border-radius: 50%;
-  background: var(--stanford-cardinal);
-  box-shadow: 0 0 0 0.48rem rgba(140, 21, 21, 0.14), 0 0 1.5rem rgba(140, 21, 21, 0.28);
+.visitor-points circle {
+  fill: #ff7a1a;
+  stroke: #ffffff;
+  stroke-width: 2.5;
+  filter: drop-shadow(0 0 10px rgba(140, 21, 21, 0.42));
+  transform-origin: center;
+  animation: visitor-pulse 2.6s ease-in-out infinite;
+  animation-delay: var(--delay);
 }
 
-.dot-na {
-  left: 24%;
-  top: 43%;
+.visitor-points text {
+  fill: rgba(28, 31, 36, 0.74);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0;
+  paint-order: stroke;
+  stroke: rgba(255, 255, 255, 0.86);
+  stroke-width: 4px;
 }
 
-.dot-eu {
-  left: 52%;
-  top: 34%;
-}
-
-.dot-cn {
-  left: 72%;
-  top: 45%;
-}
-
-.dot-au {
-  left: 80%;
-  top: 70%;
+@keyframes visitor-pulse {
+  0%, 100% {
+    r: 7;
+  }
+  50% {
+    r: 10;
+  }
 }
 
 .visitor-map-copy {
