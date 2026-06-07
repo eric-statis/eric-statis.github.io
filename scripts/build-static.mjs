@@ -599,17 +599,14 @@ write("notes/index.html", notesShell({
   active: "posts",
   content: `<article class="notes-home-info">
   <div>
-    <div class="notes-hero-stickers" aria-hidden="true">
-      <span>📚</span><span>🧠</span><span>☕</span><span>✨</span>
-    </div>
-    <header class="notes-entry-header"><h1>Welcome to Eric's Notes</h1></header>
+    <header class="notes-entry-header"><h1><span class="notes-wave" aria-hidden="true">👋</span>Welcome to Eric's Notes</h1></header>
     <section class="notes-entry-content">
       <p>I document research notes on statistics, machine learning theory, large language models, reinforcement learning, causal inference, and off-policy evaluation.</p>
     </section>
     <footer class="notes-social-icons">
-      <a href="mailto:${site.email}" title="Email">Email</a>
-      <a href="https://github.com/eric-statis" target="_blank" rel="noopener noreferrer" title="GitHub">GitHub</a>
-      <a href="https://orcid.org/0009-0007-1129-5202" target="_blank" rel="noopener noreferrer" title="ORCID">ORCID</a>
+      <a href="mailto:${site.email}" title="Email"><span aria-hidden="true">✉</span>Email</a>
+      <a href="https://github.com/eric-statis" target="_blank" rel="noopener noreferrer" title="GitHub"><span aria-hidden="true">⌘</span>GitHub</a>
+      <a href="https://orcid.org/0009-0007-1129-5202" target="_blank" rel="noopener noreferrer" title="ORCID"><span aria-hidden="true">◎</span>ORCID</a>
     </footer>
   </div>
 </article>

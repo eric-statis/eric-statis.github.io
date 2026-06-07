@@ -370,10 +370,7 @@ p {
 }
 
 .visitor-map-card {
-  display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(220px, 0.65fr);
-  gap: 1.25rem;
-  align-items: stretch;
+  display: block;
   margin: 0.5rem 0 1rem;
   padding: 1rem;
   border: 1px solid rgba(140, 21, 21, 0.16);
@@ -420,27 +417,6 @@ p {
 
 .visitor-map-live #mapmyvisitors-widget .jvectormap-container {
   background: transparent !important;
-}
-
-.visitor-map-copy {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-width: 0;
-  padding: 0.5rem 0.25rem;
-}
-
-.visitor-map-kicker {
-  color: #666;
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.visitor-map-copy p {
-  margin: 0.4rem 0 1rem;
-  color: #333;
 }
 
 .bio-content {

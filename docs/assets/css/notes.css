@@ -196,39 +196,48 @@ body.notes-site:not(.dark) .notes-sun {
   margin-top: 1.1rem;
 }
 
-.notes-hero-stickers {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem;
-  margin-bottom: 1.15rem;
+.notes-wave {
+  display: inline-block;
+  margin-right: 0.55rem;
+  font-size: 0.82em;
+  transform-origin: 70% 70%;
+  animation: notes-wave 2.4s ease-in-out infinite;
 }
 
-.notes-hero-stickers span {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 42px;
-  height: 42px;
-  border: 1px solid var(--notes-border);
-  border-radius: 10px;
-  background: var(--notes-entry);
-  font-size: 1.25rem;
-  box-shadow: 0 8px 24px rgba(29, 30, 32, 0.06);
-  transform: rotate(-2deg);
-}
-
-.notes-hero-stickers span:nth-child(2),
-.notes-hero-stickers span:nth-child(4) {
-  transform: rotate(3deg);
+@keyframes notes-wave {
+  0%, 60%, 100% {
+    transform: rotate(0deg);
+  }
+  10%, 30% {
+    transform: rotate(14deg);
+  }
+  20%, 40% {
+    transform: rotate(-8deg);
+  }
 }
 
 .notes-social-icons a {
   position: relative;
   z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   padding: 0.22rem 0;
   color: var(--notes-primary);
   font-size: 0.95rem;
   font-weight: 600;
+}
+
+.notes-social-icons a span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.2rem;
+  height: 1.2rem;
+  border: 1px solid var(--notes-border);
+  border-radius: 50%;
+  color: var(--notes-secondary);
+  font-size: 0.78rem;
 }
 
 .notes-page-header {
