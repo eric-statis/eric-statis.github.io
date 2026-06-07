@@ -259,6 +259,45 @@ body.notes-site:not(.dark) .notes-sun {
   color: var(--notes-secondary);
 }
 
+.notes-card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1.35rem 0 2rem;
+}
+
+.notes-entry-card {
+  position: relative;
+  min-height: 150px;
+  padding: 24px;
+  border: 1px solid var(--notes-border);
+  border-radius: 8px;
+  background: var(--notes-entry);
+}
+
+.notes-entry-card:hover {
+  border-color: var(--notes-secondary);
+}
+
+.notes-entry-card h2 {
+  margin: 0;
+  color: var(--notes-primary);
+  font-size: 1.35rem;
+  line-height: 1.28;
+}
+
+.notes-entry-card p {
+  margin: 0.75rem 0 0;
+  color: var(--notes-content);
+}
+
+.notes-entry-card span {
+  display: block;
+  margin-top: 1rem;
+  color: var(--notes-secondary);
+  font-size: 0.86rem;
+}
+
 .notes-resource-section {
   margin: 1.5rem 0 2rem;
 }
@@ -482,5 +521,9 @@ body.notes-site:not(.dark) .notes-sun {
   .notes-archive-item {
     grid-template-columns: 1fr;
     gap: 0.1rem;
+  }
+
+  .notes-card-grid {
+    grid-template-columns: 1fr;
   }
 }

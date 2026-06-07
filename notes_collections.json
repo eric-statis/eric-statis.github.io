@@ -1,18 +1,32 @@
 [
   {
-    "section": "Machine Learning Theory",
+    "type": "papers",
+    "title": "Papers",
     "items": []
   },
   {
-    "section": "Large Language Models",
+    "type": "posts-blogs",
+    "title": "Posts & Blogs",
     "items": []
   },
   {
-    "section": "Reinforcement Learning and Alignment",
+    "type": "ideas-opinions",
+    "title": "Ideas & Opinions",
     "items": []
   },
   {
-    "section": "Causal Inference and OPE",
+    "type": "talks-lectures",
+    "title": "Talks & Lectures",
+    "items": []
+  },
+  {
+    "type": "tools-code",
+    "title": "Tools & Code",
+    "items": []
+  },
+  {
+    "type": "datasets-benchmarks",
+    "title": "Datasets & Benchmarks",
     "items": []
   }
 ]
