@@ -38,7 +38,7 @@
     <ul class="notes-menu">
       <li><a href="/notes/" class="">Posts</a></li>
       <li><a href="/notes/archives/" class="">Archive</a></li>
-      <li><a href="/notes/categories/" class="">Categories</a></li>
+      <li><a href="/notes/collections/" class="">Collections</a></li>
       <li><a href="/notes/search/" class="active">Search</a></li>
       <li><a href="/notes/tags/" class="">Tags</a></li>
       <li><a href="/" class="">Home</a></li>
@@ -67,7 +67,7 @@ function escapeHtml(value) {
 function renderResults(query) {
   const q = query.trim().toLowerCase();
   const matches = q ? notesSearchIndex.filter((item) => [item.title, item.text, item.categories.join(" "), item.tags.join(" ")].join(" ").toLowerCase().includes(q)) : notesSearchIndex;
-  results.innerHTML = matches.map((item) => '<article class="notes-post-entry"><a class="notes-entry-link" href="' + escapeHtml(item.url) + '" aria-label="Read ' + escapeHtml(item.title) + '"></a><header class="notes-entry-header"><h2>' + escapeHtml(item.title) + '</h2></header><section class="notes-entry-content"><p>' + escapeHtml(item.text.slice(0, 220)) + '...</p></section><footer class="notes-entry-footer">Date: ' + escapeHtml(item.date) + ' | Categories: ' + escapeHtml(item.categories.join(", ") || "Uncategorized") + ' | Tags: ' + escapeHtml(item.tags.join(", ")) + '</footer></article>').join("");
+  results.innerHTML = matches.map((item) => '<article class="notes-post-entry"><a class="notes-entry-link" href="' + escapeHtml(item.url) + '" aria-label="Read ' + escapeHtml(item.title) + '"></a><header class="notes-entry-header"><h2>' + escapeHtml(item.title) + '</h2></header><section class="notes-entry-content"><p>' + escapeHtml(item.text.slice(0, 220)) + '...</p></section><footer class="notes-entry-footer">Date: ' + escapeHtml(item.date) + ' | Filed under: ' + escapeHtml(item.categories.join(", ") || "Uncategorized") + ' | Tags: ' + escapeHtml(item.tags.join(", ")) + '</footer></article>').join("");
 }
 input.addEventListener("input", (event) => renderResults(event.target.value));
 renderResults("");

@@ -14,6 +14,16 @@ function read(file) {
   return fs.readFileSync(path.join(root, file), "utf8");
 }
 
+function readJsonIfExists(file, fallback) {
+  const target = path.join(root, file);
+  if (!fs.existsSync(target)) return fallback;
+  try {
+    return JSON.parse(fs.readFileSync(target, "utf8"));
+  } catch (error) {
+    throw new Error(`Could not parse ${file}: ${error.message}`);
+  }
+}
+
 function ensureDir(dir) {
   fs.mkdirSync(dir, { recursive: true });
 }
@@ -91,6 +101,16 @@ function slugify(value) {
     .replace(/&/g, "and")
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
+}
+
+function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>'"]/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    "'": "&#39;",
+    '"': "&quot;",
+  }[char]));
 }
 
 function isTableDivider(line) {
@@ -302,7 +322,7 @@ function notesNav(active = "posts") {
     <ul class="notes-menu">
       ${item("posts", "/notes/", "Posts")}
       ${item("archive", "/notes/archives/", "Archive")}
-      ${item("categories", "/notes/categories/", "Categories")}
+      ${item("collections", "/notes/collections/", "Collections")}
       ${item("search", "/notes/search/", "Search")}
       ${item("tags", "/notes/tags/", "Tags")}
       ${item("home", "/", "Home")}
@@ -397,6 +417,8 @@ const posts = fs.readdirSync(path.join(root, "_posts"))
   })
   .sort((a, b) => String(b.date).localeCompare(String(a.date)));
 
+const collections = readJsonIfExists("notes_collections.json", []);
+
 write("blog/index.html", shell({
   title: "Blog",
   description: "Blog posts by Eric Li.",
@@ -408,7 +430,7 @@ const notesPostList = posts.map((post) => `<article class="notes-post-entry">
   <a class="notes-entry-link" href="${post.notesUrl}" aria-label="Read ${post.title}"></a>
   <header class="notes-entry-header"><h2>${post.title}</h2></header>
   <section class="notes-entry-content"><p>${excerpt(post)}</p></section>
-  <footer class="notes-entry-footer">Date: ${formatDate(post.date)} | Categories: ${post.categories.join(", ") || "Uncategorized"} | Estimated Reading Time: ${estimateReadingTime(post.body)} min | Author: Eric Li</footer>
+  <footer class="notes-entry-footer">Date: ${formatDate(post.date)} | Filed under: ${post.categories.join(", ") || "Uncategorized"} | Estimated Reading Time: ${estimateReadingTime(post.body)} min | Author: Eric Li</footer>
 </article>`).join("\n\n");
 
 write("notes/index.html", notesShell({
@@ -455,40 +477,33 @@ const tagMap = posts.reduce((acc, post) => {
   return acc;
 }, {});
 
-const categoryMap = posts.reduce((acc, post) => {
-  const postCategories = post.categories.length ? post.categories : ["Uncategorized"];
-  for (const category of postCategories) {
-    acc[category] ||= [];
-    acc[category].push(post);
-  }
-  return acc;
-}, {});
-
-const categoryList = Object.entries(categoryMap).sort((a, b) => a[0].localeCompare(b[0]));
-write("notes/categories/index.html", notesShell({
-  title: "Categories",
-  description: "Categories for Eric Li's research notes.",
-  active: "categories",
-  content: `<section class="notes-page-header"><h1>Categories</h1></section>
-<div class="notes-tags-cloud">
-${categoryList.map(([category, categoryPosts]) => `<a href="/notes/categories/${slugify(category)}/">${category}<sup>${categoryPosts.length}</sup></a>`).join("\n")}
-</div>`,
+write("notes/collections/index.html", notesShell({
+  title: "Collections",
+  description: "Curated external materials, papers, tutorials, and references saved by Eric Li.",
+  active: "collections",
+  content: `<section class="notes-page-header">
+  <h1>Collections</h1>
+  <p>Curated external materials, papers, tutorials, and references worth revisiting.</p>
+</section>
+${collections.map((section) => {
+  const items = Array.isArray(section.items) ? section.items : [];
+  return `<section class="notes-resource-section">
+  <h2>${escapeHtml(section.section || "Untitled")}</h2>
+  ${items.length ? `<div class="notes-resource-list">
+${items.map((item) => {
+  const tags = Array.isArray(item.tags) ? item.tags : [];
+  const meta = [item.source, item.added].filter(Boolean).map(escapeHtml).join(" · ");
+  return `<article class="notes-resource-item">
+    <h3><a href="${escapeHtml(item.url || "#")}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.title || "Untitled resource")}</a></h3>
+    ${meta ? `<p class="notes-resource-meta">${meta}</p>` : ""}
+    ${item.description ? `<p>${escapeHtml(item.description)}</p>` : ""}
+    ${tags.length ? `<div class="notes-resource-tags">${tags.map((tag) => `<span>${escapeHtml(tag)}</span>`).join("")}</div>` : ""}
+  </article>`;
+}).join("\n")}
+  </div>` : `<p class="notes-empty-state">No saved resources yet.</p>`}
+</section>`;
+}).join("\n")}`,
 }));
-
-for (const [category, categoryPosts] of categoryList) {
-  write(`notes/categories/${slugify(category)}/index.html`, notesShell({
-    title: category,
-    description: `${category} notes by Eric Li.`,
-    active: "categories",
-    content: `<section class="notes-page-header"><h1>${category}</h1><p><a href="/notes/categories/">← All categories</a></p></section>
-${categoryPosts.map((post) => `<article class="notes-post-entry">
-  <a class="notes-entry-link" href="${post.notesUrl}" aria-label="Read ${post.title}"></a>
-  <header class="notes-entry-header"><h2>${post.title}</h2></header>
-  <section class="notes-entry-content"><p>${excerpt(post)}</p></section>
-  <footer class="notes-entry-footer">Date: ${formatDate(post.date)} | Categories: ${post.categories.join(", ") || "Uncategorized"} | Estimated Reading Time: ${estimateReadingTime(post.body)} min | Author: Eric Li</footer>
-</article>`).join("\n\n")}`,
-  }));
-}
 
 const tagList = Object.entries(tagMap).sort((a, b) => a[0].localeCompare(b[0]));
 write("notes/tags/index.html", notesShell({
@@ -511,7 +526,7 @@ ${tagPosts.map((post) => `<article class="notes-post-entry">
   <a class="notes-entry-link" href="${post.notesUrl}" aria-label="Read ${post.title}"></a>
   <header class="notes-entry-header"><h2>${post.title}</h2></header>
   <section class="notes-entry-content"><p>${excerpt(post)}</p></section>
-  <footer class="notes-entry-footer">Date: ${formatDate(post.date)} | Categories: ${post.categories.join(", ") || "Uncategorized"} | Estimated Reading Time: ${estimateReadingTime(post.body)} min | Author: Eric Li</footer>
+  <footer class="notes-entry-footer">Date: ${formatDate(post.date)} | Filed under: ${post.categories.join(", ") || "Uncategorized"} | Estimated Reading Time: ${estimateReadingTime(post.body)} min | Author: Eric Li</footer>
 </article>`).join("\n\n")}`,
   }));
 }
@@ -550,7 +565,7 @@ function escapeHtml(value) {
 function renderResults(query) {
   const q = query.trim().toLowerCase();
   const matches = q ? notesSearchIndex.filter((item) => [item.title, item.text, item.categories.join(" "), item.tags.join(" ")].join(" ").toLowerCase().includes(q)) : notesSearchIndex;
-  results.innerHTML = matches.map((item) => '<article class="notes-post-entry"><a class="notes-entry-link" href="' + escapeHtml(item.url) + '" aria-label="Read ' + escapeHtml(item.title) + '"></a><header class="notes-entry-header"><h2>' + escapeHtml(item.title) + '</h2></header><section class="notes-entry-content"><p>' + escapeHtml(item.text.slice(0, 220)) + '...</p></section><footer class="notes-entry-footer">Date: ' + escapeHtml(item.date) + ' | Categories: ' + escapeHtml(item.categories.join(", ") || "Uncategorized") + ' | Tags: ' + escapeHtml(item.tags.join(", ")) + '</footer></article>').join("");
+  results.innerHTML = matches.map((item) => '<article class="notes-post-entry"><a class="notes-entry-link" href="' + escapeHtml(item.url) + '" aria-label="Read ' + escapeHtml(item.title) + '"></a><header class="notes-entry-header"><h2>' + escapeHtml(item.title) + '</h2></header><section class="notes-entry-content"><p>' + escapeHtml(item.text.slice(0, 220)) + '...</p></section><footer class="notes-entry-footer">Date: ' + escapeHtml(item.date) + ' | Filed under: ' + escapeHtml(item.categories.join(", ") || "Uncategorized") + ' | Tags: ' + escapeHtml(item.tags.join(", ")) + '</footer></article>').join("");
 }
 input.addEventListener("input", (event) => renderResults(event.target.value));
 renderResults("");
@@ -561,7 +576,7 @@ for (const post of posts) {
   const content = `<article class="notes-article">
   <header class="notes-post-header">
     <h1>${post.title}</h1>
-    <p>Date: ${formatDate(post.date)} | Categories: ${post.categories.join(", ") || "Uncategorized"} | Estimated Reading Time: ${estimateReadingTime(post.body)} min | Author: Eric Li</p>
+    <p>Date: ${formatDate(post.date)} | Filed under: ${post.categories.join(", ") || "Uncategorized"} | Estimated Reading Time: ${estimateReadingTime(post.body)} min | Author: Eric Li</p>
   </header>
   <section class="notes-article-content">
     ${markdownToHtml(post.body)}
@@ -588,10 +603,9 @@ write("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>
   <url><loc>${site.url}/blog/</loc></url>
   <url><loc>${site.url}/notes/</loc></url>
   <url><loc>${site.url}/notes/archives/</loc></url>
-  <url><loc>${site.url}/notes/categories/</loc></url>
+  <url><loc>${site.url}/notes/collections/</loc></url>
   <url><loc>${site.url}/notes/search/</loc></url>
   <url><loc>${site.url}/notes/tags/</loc></url>
-${categoryList.map(([category]) => `  <url><loc>${site.url}/notes/categories/${slugify(category)}/</loc></url>`).join("\n")}
 ${posts.map((post) => `  <url><loc>${site.url}${post.notesUrl}</loc></url>`).join("\n")}
 </urlset>
 `);

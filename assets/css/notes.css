@@ -259,6 +259,73 @@ body.notes-site:not(.dark) .notes-sun {
   color: var(--notes-secondary);
 }
 
+.notes-resource-section {
+  margin: 1.5rem 0 2rem;
+}
+
+.notes-resource-section h2 {
+  margin: 0 0 0.85rem;
+  color: var(--notes-primary);
+  font-size: 1.25rem;
+  line-height: 1.35;
+}
+
+.notes-resource-list {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.notes-resource-item {
+  padding: 18px;
+  border: 1px solid var(--notes-border);
+  border-radius: 8px;
+  background: var(--notes-entry);
+}
+
+.notes-resource-item:hover {
+  border-color: var(--notes-secondary);
+}
+
+.notes-resource-item h3 {
+  margin: 0;
+  color: var(--notes-primary);
+  font-size: 1.05rem;
+  line-height: 1.4;
+}
+
+.notes-resource-item p,
+.notes-empty-state {
+  margin: 0.55rem 0 0;
+  color: var(--notes-content);
+}
+
+.notes-resource-meta {
+  color: var(--notes-secondary);
+  font-size: 0.86rem;
+}
+
+.notes-resource-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.75rem;
+}
+
+.notes-resource-tags span {
+  padding: 0.16rem 0.45rem;
+  border-radius: 999px;
+  background: var(--notes-tertiary);
+  color: var(--notes-secondary);
+  font-size: 0.78rem;
+}
+
+.notes-empty-state {
+  padding: 16px 18px;
+  border: 1px dashed var(--notes-border);
+  border-radius: 8px;
+  color: var(--notes-secondary);
+}
+
 .notes-search-box input {
   width: 100%;
   margin-bottom: 1.4rem;
