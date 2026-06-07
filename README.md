@@ -121,12 +121,7 @@ GitHub Pages will publish the prebuilt static site from `docs/`.
 
 ## Real Visitor Analytics
 
-This site supports two analytics layers:
-
-- Cloudflare Web Analytics for private dashboard analytics.
-- GoatCounter for public homepage counters.
-
-Cloudflare is lightweight, works on GitHub Pages, and shows aggregate visits, pages, referrers, devices, and countries in the Cloudflare dashboard.
+This site is prepared for Cloudflare Web Analytics. It is lightweight, works on GitHub Pages, and shows aggregate visits, pages, referrers, devices, and countries in the Cloudflare dashboard.
 
 1. Open Cloudflare Dashboard → Analytics & Logs → Web Analytics.
 2. Add `eric-statis.github.io` as a site and copy the Web Analytics token.
@@ -148,29 +143,6 @@ CLOUDFLARE_WEB_ANALYTICS_TOKEN="your-token" npm run build:docs
 
 The token appears in the published HTML by design; it identifies the website to Cloudflare but does not expose visitor identities. Analytics services show aggregate traffic, not the real names of visitors.
 
-To show live counters on the homepage:
-
-1. Create a GoatCounter site at `https://www.goatcounter.com/`.
-2. Enable public visitor counters in GoatCounter's site settings.
-3. Add the GoatCounter code to your local ignored `analytics_config.json`:
-
-```json
-{
-  "cloudflareWebAnalyticsToken": "your-cloudflare-token",
-  "goatCounterCode": "your-goatcounter-subdomain"
-}
-```
-
-If your GoatCounter URL is `https://eric-statis.goatcounter.com/`, then the code is:
-
-```text
-eric-statis
-```
-
-4. Run `npm run build:docs`, commit, and push.
-
-The homepage will then show total views and homepage views. GoatCounter still reports anonymous counts, not visitor names.
-
 ## Visitor Map
 
-The homepage `Visitors` section uses a local SVG map so the page remains stable even if third-party map widgets fail. Real visitor data is collected separately through Cloudflare Web Analytics when a token is configured.
+The homepage `Visitors` section uses MapMyVisitors. A local CSS fallback map is applied behind the widget so visitor dots and pageview text remain visible even when MapMyVisitors' own background image fails to load.
