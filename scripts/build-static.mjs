@@ -448,12 +448,7 @@ write("blog/index.html", shell({
   title: "Blog",
   description: "Research notes, paper reading logs, tutorials, and academic blog posts by Eric Li.",
   active: "blog",
-  content: pageShell("Blog", `<a class="notes-portal-card" href="/notes/">
-  <span class="blog-category-kicker">Separate Notes Site</span>
-  <strong>Eric's Notes</strong>
-  <span>A clean PaperMod-style notebook for research notes, archives, tags, and search.</span>
-</a>
-<div class="blog-category-grid">${categoryCards}</div>
+  content: pageShell("Blog", `<div class="blog-category-grid">${categoryCards}</div>
 <h2 class="title is-4 mt-6 mb-4">Recent Posts</h2>
 <div class="publications-container">${postList}</div>`),
 }));
