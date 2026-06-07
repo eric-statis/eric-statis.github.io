@@ -119,10 +119,19 @@ function escapeHtml(value) {
 }
 
 function analyticsSnippet() {
-  const token = process.env.CLOUDFLARE_WEB_ANALYTICS_TOKEN || analyticsConfig.cloudflareWebAnalyticsToken || "";
-  if (!token) return "";
-  const beacon = JSON.stringify({ token });
-  return `  <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='${escapeHtml(beacon)}'></script>\n`;
+  const snippets = [];
+  const cloudflareToken = process.env.CLOUDFLARE_WEB_ANALYTICS_TOKEN || analyticsConfig.cloudflareWebAnalyticsToken || "";
+  const goatCounterCode = process.env.GOATCOUNTER_CODE || analyticsConfig.goatCounterCode || "";
+  if (cloudflareToken) {
+    const beacon = JSON.stringify({ token: cloudflareToken });
+    snippets.push(`  <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='${escapeHtml(beacon)}'></script>`);
+  }
+  if (goatCounterCode) {
+    const safeCode = escapeHtml(goatCounterCode);
+    snippets.push(`  <script>window.SITE_GOATCOUNTER_CODE = "${safeCode}";</script>`);
+    snippets.push(`  <script data-goatcounter="https://${safeCode}.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>`);
+  }
+  return snippets.length ? `${snippets.join("\n")}\n` : "";
 }
 
 function isPrivateValue(value) {

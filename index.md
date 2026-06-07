@@ -165,6 +165,17 @@ description: Eric Li - academic homepage with research, publications, blog posts
         <div class="visitor-map-copy">
           <span class="visitor-map-kicker">Visitor Map</span>
           <p>A lightweight map view for eric-statis.github.io, showing approximate visitor regions.</p>
+          <div class="visitor-stat-row" data-goatcounter-stats>
+            <div class="visitor-stat-card">
+              <strong data-visitor-total>--</strong>
+              <span>Total views</span>
+            </div>
+            <div class="visitor-stat-card">
+              <strong data-visitor-page>--</strong>
+              <span>This page</span>
+            </div>
+          </div>
+          <p class="visitor-stat-note" data-visitor-note>Live visitor counts appear after GoatCounter is connected.</p>
         </div>
       </div>
     </div>

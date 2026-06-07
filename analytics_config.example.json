@@ -1,3 +1,4 @@
 {
-  "cloudflareWebAnalyticsToken": "paste-your-cloudflare-web-analytics-token-here"
+  "cloudflareWebAnalyticsToken": "paste-your-cloudflare-web-analytics-token-here",
+  "goatCounterCode": "your-goatcounter-subdomain"
 }
