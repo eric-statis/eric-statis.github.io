@@ -14,6 +14,13 @@
         "source": "Lilian Weng",
         "added": "2026-06-07",
         "tags": ["reinforcement-learning", "policy-gradient"]
+      },
+      {
+        "title": "Notes on the Generalized Advantage Estimation Paper",
+        "url": "https://danieltakeshi.github.io/2017/04/02/notes-on-the-generalized-advantage-estimation-paper/",
+        "source": "Daniel Seita",
+        "added": "2026-06-07",
+        "tags": ["reinforcement-learning", "gae", "advantage-estimation"]
       }
     ]
   },
