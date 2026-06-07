@@ -119,15 +119,30 @@ Folder: /docs
 
 GitHub Pages will publish the prebuilt static site from `docs/`.
 
+## Real Visitor Analytics
+
+This site is prepared for Cloudflare Web Analytics. It is lightweight, works on GitHub Pages, and shows aggregate visits, pages, referrers, devices, and countries in the Cloudflare dashboard.
+
+1. Open Cloudflare Dashboard → Analytics & Logs → Web Analytics.
+2. Add `eric-statis.github.io` as a site and copy the Web Analytics token.
+3. Either create a local ignored file named `analytics_config.json`:
+
+```json
+{
+  "cloudflareWebAnalyticsToken": "your-token"
+}
+```
+
+Or build with an environment variable:
+
+```bash
+CLOUDFLARE_WEB_ANALYTICS_TOKEN="your-token" npm run build:docs
+```
+
+4. Commit and push the regenerated `docs/` folder.
+
+The token appears in the published HTML by design; it identifies the website to Cloudflare but does not expose visitor identities. Analytics services show aggregate traffic, not the real names of visitors.
+
 ## Visitor Map
 
-The homepage has a `Visitors` section powered by MapMyVisitors.
-
-1. Open `https://mapmyvisitors.com/add`.
-2. Enter `https://eric-statis.github.io/`.
-3. Verify the account and choose the widget type.
-4. Copy the code from `Get Code`.
-5. Replace the MapMyVisitors script inside the `visitor-map-live` block in `index.md`.
-6. Run `npm run build:docs`, commit, and push.
-
-MapMyVisitors processes visitor IP addresses to show approximate locations, so keep the service's privacy requirements in mind before enabling the live widget.
+The homepage `Visitors` section uses a local SVG map so the page remains stable even if third-party map widgets fail. Real visitor data is collected separately through Cloudflare Web Analytics when a token is configured.

@@ -1,5 +1,6 @@
 _site/
 _private_posts/
+analytics_config.json
 .bundle/
 vendor/
 Gemfile.lock

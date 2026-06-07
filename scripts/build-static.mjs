@@ -27,6 +27,8 @@ function readJsonIfExists(file, fallback) {
   }
 }
 
+const analyticsConfig = readJsonIfExists("analytics_config.json", {});
+
 function ensureDir(dir) {
   fs.mkdirSync(dir, { recursive: true });
 }
@@ -114,6 +116,13 @@ function escapeHtml(value) {
     "'": "&#39;",
     '"': "&quot;",
   }[char]));
+}
+
+function analyticsSnippet() {
+  const token = process.env.CLOUDFLARE_WEB_ANALYTICS_TOKEN || analyticsConfig.cloudflareWebAnalyticsToken || "";
+  if (!token) return "";
+  const beacon = JSON.stringify({ token });
+  return `  <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='${escapeHtml(beacon)}'></script>\n`;
 }
 
 function isPrivateValue(value) {
@@ -334,6 +343,7 @@ ${content}
   </div>
 </footer>
 <script src="/assets/js/main.js"></script>
+${analyticsSnippet()}
 </body>
 </html>`;
 }
@@ -400,6 +410,7 @@ ${content}
 </footer>
 <a href="#top" class="notes-top-link" aria-label="Go to top">▲</a>
 <script src="/assets/js/main.js"></script>
+${analyticsSnippet()}
 </body>
 </html>`;
 }
