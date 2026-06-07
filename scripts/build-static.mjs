@@ -10,29 +10,6 @@ const site = {
   url: "https://eric-statis.github.io",
 };
 
-const categories = [
-  {
-    title: "Deep Learning",
-    slug: "deep-learning",
-    description: "LLMs, neural networks, architectures, and technical evolution notes.",
-  },
-  {
-    title: "Statistics & ML Theory",
-    slug: "statistics-ml-theory",
-    description: "Statistical learning, theory, uncertainty, and principled evaluation.",
-  },
-  {
-    title: "Paper Reading",
-    slug: "paper-reading",
-    description: "Paper notes, summaries, and reading maps for new directions.",
-  },
-  {
-    title: "Research Notes",
-    slug: "research-notes",
-    description: "Working notes, experiment logs, and Obsidian-to-blog drafts.",
-  },
-];
-
 function read(file) {
   return fs.readFileSync(path.join(root, file), "utf8");
 }
@@ -413,44 +390,16 @@ const posts = fs.readdirSync(path.join(root, "_posts"))
   .map((file) => {
     const [data, body] = parseFrontMatter(read(path.join("_posts", file)));
     const slug = file.replace(/^\d{4}-\d{2}-\d{2}-/, "").replace(/\.md$/, "");
-    const postCategories = Array.isArray(data.categories) ? data.categories : [];
     const tags = Array.isArray(data.tags) ? data.tags : [];
-    return { ...data, categories: postCategories, tags, body, slug, url: `/blog/${slug}/`, notesUrl: `/notes/posts/${slug}/` };
+    return { ...data, tags, body, slug, notesUrl: `/notes/posts/${slug}/` };
   })
   .sort((a, b) => String(b.date).localeCompare(String(a.date)));
 
-function renderPostList(list) {
-  if (!list.length) return "<p>No posts in this category yet.</p>";
-  return list.map((post) => `<a href="${post.url}" class="publication-box-link">
-  <div class="post-item">
-    <div class="post-title"><span class="paper-link">${post.title}</span></div>
-    <div class="post-meta">${formatDate(post.date)}${post.tags?.length ? ` · ${post.tags.join(", ")}` : ""}</div>
-    <p>${post.summary || ""}</p>
-  </div>
-</a>`).join("\n\n");
-}
-
-const categoryCards = categories.map((category) => `<a class="blog-category-card" href="/blog/categories/${category.slug}/">
-  <span class="blog-category-kicker">Category</span>
-  <strong>${category.title}</strong>
-  <span>${category.description}</span>
-</a>`).join("\n");
-
-const postList = posts.map((post) => `<a href="${post.url}" class="publication-box-link">
-  <div class="post-item">
-    <div class="post-title"><span class="paper-link">${post.title}</span></div>
-    <div class="post-meta">${formatDate(post.date)}${post.tags?.length ? ` · ${post.tags.join(", ")}` : ""}</div>
-    <p>${post.summary || ""}</p>
-  </div>
-</a>`).join("\n\n");
-
 write("blog/index.html", shell({
   title: "Blog",
-  description: "Research notes, paper reading logs, tutorials, and academic blog posts by Eric Li.",
+  description: "Blog posts by Eric Li.",
   active: "blog",
-  content: pageShell("Blog", `<div class="blog-category-grid">${categoryCards}</div>
-<h2 class="title is-4 mt-6 mb-4">Recent Posts</h2>
-<div class="publications-container">${postList}</div>`),
+  content: pageShell("Blog", `<p>Blog posts will be added later. Research notes now live in <a href="/notes/">Notes</a>.</p>`),
 }));
 
 const notesPostList = posts.map((post) => `<article class="notes-post-entry">
@@ -570,34 +519,6 @@ renderResults("");
 </script>`,
 }));
 
-for (const category of categories) {
-  const categoryPosts = posts.filter((post) => post.categories.includes(category.title));
-  write(`blog/categories/${category.slug}/index.html`, shell({
-    title: category.title,
-    description: `${category.title} posts by Eric Li.`,
-    active: "blog",
-    content: pageShell(category.title, `<p><a href="/blog/">← Back to Blog</a></p><div class="publications-container">${renderPostList(categoryPosts)}</div>`),
-  }));
-}
-
-for (const post of posts) {
-  const content = `<div class="section pt-5 page-hero-wall">
-  <div class="container is-max-desktop px-5">
-    <article class="content article-card" style="max-width: 90%; margin: 0 auto;">
-      <h1 class="title is-2 mb-5">${post.title}</h1>
-      <p class="subtitle">${formatDate(post.date)}${post.tags?.length ? ` · ${post.tags.join(", ")}` : ""}</p>
-      ${markdownToHtml(post.body)}
-    </article>
-  </div>
-</div>`;
-  write(`blog/${post.slug}/index.html`, shell({
-    title: post.title,
-    description: post.summary,
-    active: "blog",
-    content,
-  }));
-}
-
 for (const post of posts) {
   const content = `<article class="notes-article">
   <header class="notes-post-header">
@@ -631,8 +552,6 @@ write("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>
   <url><loc>${site.url}/notes/archives/</loc></url>
   <url><loc>${site.url}/notes/search/</loc></url>
   <url><loc>${site.url}/notes/tags/</loc></url>
-${categories.map((category) => `  <url><loc>${site.url}/blog/categories/${category.slug}/</loc></url>`).join("\n")}
-${posts.map((post) => `  <url><loc>${site.url}${post.url}</loc></url>`).join("\n")}
 ${posts.map((post) => `  <url><loc>${site.url}${post.notesUrl}</loc></url>`).join("\n")}
 </urlset>
 `);
