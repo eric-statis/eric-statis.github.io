@@ -32,7 +32,15 @@
   {
     "type": "talks-lectures",
     "title": "Talks & Lectures",
-    "items": []
+    "items": [
+      {
+        "title": "Deep Reinforcement Learning (2018)",
+        "url": "https://www.youtube.com/playlist?list=PLJV_el3uVTsODxQFgzMzPLa16h6B8kWM_",
+        "source": "Hung-yi Lee (NTU)",
+        "added": "2026-06-07",
+        "tags": ["reinforcement-learning", "deep-learning", "course"]
+      }
+    ]
   },
   {
     "type": "tools-code",
