@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Posts & Blogs - Eric's Blog</title>
+  <meta name="description" content="External blog posts, technical essays, and research notes.">
+  <meta name="author" content="Eric Li">
+  <meta name="robots" content="index, follow">
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="stylesheet" href="/assets/css/notes.css?v=20260608-2">
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body class="notes-site">
+<script>
+  if (localStorage.getItem("notes-theme") === "dark" || (!localStorage.getItem("notes-theme") && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+    document.body.classList.add("dark");
+  }
+</script>
+<header class="notes-header" id="top">
+  <nav class="notes-nav">
+    <div class="notes-logo">
+      <a href="/blog/" title="Eric's Blog">Eric's Blog</a>
+      <button id="notes-theme-toggle" type="button" title="Toggle theme" aria-label="Toggle theme">
+        <span class="notes-moon">☾</span><span class="notes-sun">☀</span>
+      </button>
+    </div>
+    <ul class="notes-menu">
+      <li><a href="/blog/" class="">Posts</a></li>
+      <li><a href="/blog/archives/" class="">Archive</a></li>
+      <li><a href="/blog/collections/" class="active">Collections</a></li>
+      <li><a href="/blog/search/" class="">Search</a></li>
+      <li><a href="/blog/tags/" class="">Tags</a></li>
+      <li><a href="/" class="">Home</a></li>
+    </ul>
+  </nav>
+</header>
+<main class="notes-main">
+<section class="notes-page-header">
+  <h1>Posts &amp; Blogs</h1>
+  <p><a href="/blog/collections/">← All collections</a></p>
+</section>
+<div class="notes-resource-list">
+<article class="notes-resource-item">
+    <h3><a href="https://lilianweng.github.io/posts/2018-04-08-policy-gradient/" target="_blank" rel="noopener noreferrer">Policy Gradient Algorithms</a></h3>
+    <p class="notes-resource-meta">Lilian Weng · 2026-06-07</p>
+    
+    <div class="notes-resource-tags"><span>reinforcement-learning</span><span>policy-gradient</span></div>
+  </article>
+<article class="notes-resource-item">
+    <h3><a href="https://danieltakeshi.github.io/2017/04/02/notes-on-the-generalized-advantage-estimation-paper/" target="_blank" rel="noopener noreferrer">Notes on the Generalized Advantage Estimation Paper</a></h3>
+    <p class="notes-resource-meta">Daniel Seita · 2026-06-07</p>
+    
+    <div class="notes-resource-tags"><span>reinforcement-learning</span><span>gae</span><span>advantage-estimation</span></div>
+  </article>
+  </div>
+</main>
+<footer class="notes-footer">
+  <span>© 2026 <a href="/blog/">Eric's Blog</a></span>
+  <span>Built as a minimal research notebook.</span>
+</footer>
+<a href="#top" class="notes-top-link" aria-label="Go to top">▲</a>
+<script src="/assets/js/main.js"></script>
+
+</body>
+</html>

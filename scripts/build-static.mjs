@@ -6,10 +6,11 @@ const root = process.cwd();
 const out = path.join(root, "_site");
 const site = {
   title: "Eric Li",
-  notesTitle: "Eric's Notes",
+  notesTitle: "Eric's Blog",
   email: "lizongxu65@gmail.com",
   url: "https://eric-statis.github.io",
 };
+const blogBase = "/blog";
 const privatePassword = process.env.NOTES_PRIVATE_PASSWORD || "";
 const privateKdfIterations = 210000;
 
@@ -301,7 +302,6 @@ function nav(active) {
           <a class="navbar-item ${active === "about" ? "is-active" : ""}" href="/">About</a>
           <a class="navbar-item ${active === "publications" ? "is-active" : ""}" href="/publications/">Publications</a>
           <a class="navbar-item ${active === "blog" ? "is-active" : ""}" href="/blog/">Blog</a>
-          <a class="navbar-item ${active === "notes" ? "is-active" : ""}" href="/notes/">Notes</a>
         </div>
       </div>
     </div>
@@ -356,17 +356,17 @@ function notesNav(active = "posts") {
   return `<header class="notes-header" id="top">
   <nav class="notes-nav">
     <div class="notes-logo">
-      <a href="/notes/" title="${site.notesTitle}">${site.notesTitle}</a>
+      <a href="${blogBase}/" title="${site.notesTitle}">${site.notesTitle}</a>
       <button id="notes-theme-toggle" type="button" title="Toggle theme" aria-label="Toggle theme">
         <span class="notes-moon">☾</span><span class="notes-sun">☀</span>
       </button>
     </div>
     <ul class="notes-menu">
-      ${item("posts", "/notes/", "Posts")}
-      ${item("archive", "/notes/archives/", "Archive")}
-      ${item("collections", "/notes/collections/", "Collections")}
-      ${item("search", "/notes/search/", "Search")}
-      ${item("tags", "/notes/tags/", "Tags")}
+      ${item("posts", `${blogBase}/`, "Posts")}
+      ${item("archive", `${blogBase}/archives/`, "Archive")}
+      ${item("collections", `${blogBase}/collections/`, "Collections")}
+      ${item("search", `${blogBase}/search/`, "Search")}
+      ${item("tags", `${blogBase}/tags/`, "Tags")}
       ${item("home", "/", "Home")}
     </ul>
   </nav>
@@ -384,7 +384,7 @@ function notesShell({ title, description, active, content }) {
   <meta name="author" content="${site.title}">
   <meta name="robots" content="index, follow">
   <link rel="stylesheet" href="/assets/css/main.css">
-  <link rel="stylesheet" href="/assets/css/notes.css?v=20260608-1">
+  <link rel="stylesheet" href="/assets/css/notes.css?v=20260608-2">
   <script>
     window.MathJax = {
       tex: {
@@ -408,7 +408,7 @@ ${notesNav(active)}
 ${content}
 </main>
 <footer class="notes-footer">
-  <span>© 2026 <a href="/notes/">${site.notesTitle}</a></span>
+  <span>© 2026 <a href="${blogBase}/">${site.notesTitle}</a></span>
   <span>Built as a minimal research notebook.</span>
 </footer>
 <a href="#top" class="notes-top-link" aria-label="Go to top">▲</a>
@@ -427,6 +427,23 @@ function pageShell(title, body) {
     </div>
   </div>
 </div>`;
+}
+
+function redirectPage(to) {
+  const safeTo = escapeHtml(to);
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="refresh" content="0; url=${safeTo}">
+  <link rel="canonical" href="${safeTo}">
+  <title>Redirecting - ${site.title}</title>
+</head>
+<body>
+  <p>Redirecting to <a href="${safeTo}">${safeTo}</a>.</p>
+</body>
+</html>`;
 }
 
 fs.rmSync(out, { recursive: true, force: true });
@@ -465,7 +482,7 @@ const posts = postSources.flatMap((source) => {
       const categories = Array.isArray(data.categories) ? data.categories : [];
       const tags = Array.isArray(data.tags) ? data.tags : [];
       const isPrivate = source.defaultPrivate || isPrivateValue(data.private);
-      return { ...data, categories, tags, private: isPrivate, body, slug, notesUrl: `/notes/posts/${slug}/` };
+      return { ...data, categories, tags, private: isPrivate, body, slug, notesUrl: `${blogBase}/posts/${slug}/` };
     });
 })
   .sort((a, b) => String(b.date).localeCompare(String(a.date)));
@@ -506,6 +523,26 @@ const collectionTypes = [
 
 function postMeta(post) {
   return `Date: ${formatDate(post.date)} | Estimated Reading Time: ${estimateReadingTime(post.body)} min | Author: Eric Li`;
+}
+
+function socialIcon(name) {
+  const attrs = `xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"`;
+  const icons = {
+    email: `<svg ${attrs} aria-hidden="true"><path d="M4 4h16v16H4z"></path><path d="m22 6-10 7L2 6"></path></svg>`,
+    scholar: `<svg ${attrs} aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>`,
+    github: `<svg ${attrs} aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>`,
+    orcid: `<svg ${attrs} aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M9 17V9"></path><path d="M9 6.8v.1"></path><path d="M12.5 17V7h2.2a4.1 4.1 0 0 1 0 8.2h-2.2"></path></svg>`,
+  };
+  return icons[name] || "";
+}
+
+function socialIcons() {
+  return `<footer class="notes-social-icons">
+      <a href="mailto:${site.email}" title="Email" aria-label="Email">${socialIcon("email")}</a>
+      <a href="https://scholar.google.com/" target="_blank" rel="noopener noreferrer me" title="Google Scholar" aria-label="Google Scholar">${socialIcon("scholar")}</a>
+      <a href="https://github.com/eric-statis" target="_blank" rel="noopener noreferrer me" title="GitHub" aria-label="GitHub">${socialIcon("github")}</a>
+      <a href="https://orcid.org/0009-0007-1129-5202" target="_blank" rel="noopener noreferrer me" title="ORCID" aria-label="ORCID">${socialIcon("orcid")}</a>
+    </footer>`;
 }
 
 function postCard(post) {
@@ -576,64 +613,23 @@ function collectionItemsFor(type) {
   return Array.isArray(group?.items) ? group.items : [];
 }
 
-write("blog/index.html", shell({
-  title: "Blog",
-  description: "Blog posts by Eric Li.",
-  active: "blog",
-  content: pageShell("Blog", `<p>Blog posts will be added later. Research notes now live in <a href="/notes/">Notes</a>.</p>`),
-}));
-
-const topicMap = posts.reduce((acc, post) => {
-  const topics = post.categories.length ? post.categories : ["Uncategorized"];
-  for (const topic of topics) {
-    acc[topic] ||= [];
-    acc[topic].push(post);
-  }
-  return acc;
-}, {});
-const topicList = Object.entries(topicMap).sort((a, b) => a[0].localeCompare(b[0]));
-
-write("notes/index.html", notesShell({
+write("blog/index.html", notesShell({
   title: "",
-  description: "Eric Li's research notes on statistics, machine learning theory, and large language models.",
+  description: "Eric Li's blog on statistics, machine learning theory, and large language models.",
   active: "posts",
   content: `<article class="notes-home-info">
   <div>
-    <header class="notes-entry-header"><h1><span class="notes-wave" aria-hidden="true">👋</span>Welcome to Eric's Notes</h1></header>
+    <header class="notes-entry-header"><h1><span class="notes-wave" aria-hidden="true">👋</span>Welcome to Eric's Blog</h1></header>
     <section class="notes-entry-content">
-      <p>I document research notes on statistics, machine learning theory, large language models, reinforcement learning, causal inference, and off-policy evaluation.</p>
+      <p>I document research notes and blog posts on statistics, machine learning theory, large language models, reinforcement learning, causal inference, and off-policy evaluation.</p>
     </section>
-    <footer class="notes-social-icons">
-      <a href="mailto:${site.email}" title="Email"><span aria-hidden="true">✉</span>Email</a>
-      <a href="https://github.com/eric-statis" target="_blank" rel="noopener noreferrer" title="GitHub"><span aria-hidden="true">⌘</span>GitHub</a>
-      <a href="https://orcid.org/0009-0007-1129-5202" target="_blank" rel="noopener noreferrer" title="ORCID"><span aria-hidden="true">◎</span>ORCID</a>
-    </footer>
+    ${socialIcons()}
   </div>
 </article>
-<section class="notes-card-grid notes-topic-grid">
-${topicList.map(([topic, topicPosts]) => {
-  const latest = topicPosts.reduce((current, post) => String(post.date) > String(current.date) ? post : current, topicPosts[0]);
-  return `<article class="notes-entry-card">
-  <a class="notes-entry-link" href="/notes/topics/${slugify(topic)}/" aria-label="Open ${escapeHtml(topic)}"></a>
-  <h2>${escapeHtml(topic)}</h2>
-  <span>Updated ${formatDate(latest.date)}</span>
-</article>`;
-}).join("\n")}
-</section>`,
+${posts.map(postCard).join("\n\n")}`,
 }));
 
-for (const [topic, topicPosts] of topicList) {
-  write(`notes/topics/${slugify(topic)}/index.html`, notesShell({
-    title: topic,
-    description: `${topic} notes by Eric Li.`,
-    active: "posts",
-    content: `<section class="notes-page-header">
-  <h1>${escapeHtml(topic)}</h1>
-  <p><a href="/notes/">← All topics</a></p>
-</section>
-${topicPosts.map(postCard).join("\n\n")}`,
-  }));
-}
+write("notes/index.html", redirectPage(`${blogBase}/`));
 
 const postsByYear = posts.reduce((acc, post) => {
   const year = String(post.date).slice(0, 4);
@@ -642,7 +638,7 @@ const postsByYear = posts.reduce((acc, post) => {
   return acc;
 }, {});
 
-write("notes/archives/index.html", notesShell({
+write("blog/archives/index.html", notesShell({
   title: "Archive",
   description: "Archive of Eric Li's research notes.",
   active: "archive",
@@ -661,7 +657,7 @@ const tagMap = posts.reduce((acc, post) => {
   return acc;
 }, {});
 
-write("notes/collections/index.html", notesShell({
+write("blog/collections/index.html", notesShell({
   title: "Collections",
   description: "Curated external materials, papers, tutorials, and references saved by Eric Li.",
   active: "collections",
@@ -673,7 +669,7 @@ write("notes/collections/index.html", notesShell({
 ${collectionTypes.map((type) => {
   const items = collectionItemsFor(type);
   return `<article class="notes-entry-card">
-  <a class="notes-entry-link" href="/notes/collections/${type.key}/" aria-label="Open ${escapeHtml(type.title)}"></a>
+  <a class="notes-entry-link" href="${blogBase}/collections/${type.key}/" aria-label="Open ${escapeHtml(type.title)}"></a>
   <h2>${escapeHtml(type.title)}</h2>
   <p>${escapeHtml(type.description)}</p>
 </article>`;
@@ -683,13 +679,13 @@ ${collectionTypes.map((type) => {
 
 for (const type of collectionTypes) {
   const items = collectionItemsFor(type);
-  write(`notes/collections/${type.key}/index.html`, notesShell({
+  write(`blog/collections/${type.key}/index.html`, notesShell({
     title: type.title,
     description: type.description,
     active: "collections",
     content: `<section class="notes-page-header">
   <h1>${escapeHtml(type.title)}</h1>
-  <p><a href="/notes/collections/">← All collections</a></p>
+  <p><a href="${blogBase}/collections/">← All collections</a></p>
 </section>
 ${items.length ? `<div class="notes-resource-list">
 ${items.map((item) => {
@@ -707,22 +703,22 @@ ${items.map((item) => {
 }
 
 const tagList = Object.entries(tagMap).sort((a, b) => a[0].localeCompare(b[0]));
-write("notes/tags/index.html", notesShell({
+write("blog/tags/index.html", notesShell({
   title: "Tags",
   description: "Tags for Eric Li's research notes.",
   active: "tags",
   content: `<section class="notes-page-header"><h1>Tags</h1></section>
 <div class="notes-tags-cloud">
-${tagList.map(([tag, tagPosts]) => `<a href="/notes/tags/${slugify(tag)}/">${tag}<sup>${tagPosts.length}</sup></a>`).join("\n")}
+${tagList.map(([tag, tagPosts]) => `<a href="${blogBase}/tags/${slugify(tag)}/">${tag}<sup>${tagPosts.length}</sup></a>`).join("\n")}
 </div>`,
 }));
 
 for (const [tag, tagPosts] of tagList) {
-  write(`notes/tags/${slugify(tag)}/index.html`, notesShell({
+  write(`blog/tags/${slugify(tag)}/index.html`, notesShell({
     title: tag,
     description: `${tag} notes by Eric Li.`,
     active: "tags",
-    content: `<section class="notes-page-header"><h1>${tag}</h1><p><a href="/notes/tags/">← All tags</a></p></section>
+    content: `<section class="notes-page-header"><h1>${tag}</h1><p><a href="${blogBase}/tags/">← All tags</a></p></section>
 ${tagPosts.map(postCard).join("\n\n")}`,
   }));
 }
@@ -737,7 +733,7 @@ const searchIndex = JSON.stringify(posts.map((post) => ({
   text: stripMarkdown(`${post.title} ${post.summary || ""} ${post.private ? "" : post.body}`).slice(0, 1200),
 })));
 
-write("notes/search/index.html", notesShell({
+write("blog/search/index.html", notesShell({
   title: "Search",
   description: "Search Eric Li's research notes.",
   active: "search",
@@ -771,7 +767,7 @@ renderResults("");
 
 for (const post of posts) {
   if (post.private) {
-    write(`notes/posts/${post.slug}/index.html`, notesShell({
+    write(`blog/posts/${post.slug}/index.html`, notesShell({
       title: post.title,
       description: post.summary,
       active: "posts",
@@ -788,12 +784,30 @@ for (const post of posts) {
     ${markdownToHtml(post.body)}
   </section>
 </article>`;
-  write(`notes/posts/${post.slug}/index.html`, notesShell({
+  write(`blog/posts/${post.slug}/index.html`, notesShell({
     title: post.title,
     description: post.summary,
     active: "posts",
     content,
   }));
+}
+
+write("notes/archives/index.html", redirectPage(`${blogBase}/archives/`));
+write("notes/collections/index.html", redirectPage(`${blogBase}/collections/`));
+write("notes/search/index.html", redirectPage(`${blogBase}/search/`));
+write("notes/tags/index.html", redirectPage(`${blogBase}/tags/`));
+for (const type of collectionTypes) {
+  write(`notes/collections/${type.key}/index.html`, redirectPage(`${blogBase}/collections/${type.key}/`));
+}
+for (const [tag] of tagList) {
+  write(`notes/tags/${slugify(tag)}/index.html`, redirectPage(`${blogBase}/tags/${slugify(tag)}/`));
+}
+for (const post of posts) {
+  write(`notes/posts/${post.slug}/index.html`, redirectPage(post.notesUrl));
+}
+const legacyTopics = [...new Set(posts.flatMap((post) => post.categories))];
+for (const topic of legacyTopics) {
+  write(`notes/topics/${slugify(topic)}/index.html`, redirectPage(`${blogBase}/`));
 }
 
 write("robots.txt", `User-agent: *
@@ -807,13 +821,11 @@ write("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>
   <url><loc>${site.url}/</loc></url>
   <url><loc>${site.url}/publications/</loc></url>
   <url><loc>${site.url}/blog/</loc></url>
-  <url><loc>${site.url}/notes/</loc></url>
-  <url><loc>${site.url}/notes/archives/</loc></url>
-  <url><loc>${site.url}/notes/collections/</loc></url>
-  <url><loc>${site.url}/notes/search/</loc></url>
-  <url><loc>${site.url}/notes/tags/</loc></url>
-${topicList.map(([topic]) => `  <url><loc>${site.url}/notes/topics/${slugify(topic)}/</loc></url>`).join("\n")}
-${collectionTypes.map((type) => `  <url><loc>${site.url}/notes/collections/${type.key}/</loc></url>`).join("\n")}
+  <url><loc>${site.url}/blog/archives/</loc></url>
+  <url><loc>${site.url}/blog/collections/</loc></url>
+  <url><loc>${site.url}/blog/search/</loc></url>
+  <url><loc>${site.url}/blog/tags/</loc></url>
+${collectionTypes.map((type) => `  <url><loc>${site.url}/blog/collections/${type.key}/</loc></url>`).join("\n")}
 ${posts.map((post) => `  <url><loc>${site.url}${post.notesUrl}</loc></url>`).join("\n")}
 </urlset>
 `);

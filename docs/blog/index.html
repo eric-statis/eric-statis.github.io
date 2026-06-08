@@ -3,62 +3,89 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Blog - Eric Li | Academic Homepage</title>
-  <meta name="description" content="Blog posts by Eric Li.">
+  <title>Eric's Blog</title>
+  <meta name="description" content="Eric Li's blog on statistics, machine learning theory, and large language models.">
   <meta name="author" content="Eric Li">
   <meta name="robots" content="index, follow">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
   <link rel="stylesheet" href="/assets/css/main.css">
-  <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>
+  <link rel="stylesheet" href="/assets/css/notes.css?v=20260608-2">
   <script>
     window.MathJax = {
       tex: {
-        inlineMath: [['\\(', '\\)']],
-        displayMath: [['\\[', '\\]']]
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
       },
       svg: { fontCache: 'global' }
     };
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
-<body>
-
-  <nav class="navbar is-light" role="navigation" aria-label="main navigation">
-    <div class="container" style="max-width: 900px; margin: 0 auto;">
-      <div class="navbar-brand">
-        <a class="navbar-item" href="/"><strong>Eric Li</strong></a>
-        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
-          <span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span>
-        </a>
-      </div>
-      <div id="navbarMenu" class="navbar-menu">
-        <div class="navbar-end">
-          <a class="navbar-item " href="/">About</a>
-          <a class="navbar-item " href="/publications/">Publications</a>
-          <a class="navbar-item is-active" href="/blog/">Blog</a>
-          <a class="navbar-item " href="/notes/">Notes</a>
-        </div>
-      </div>
+<body class="notes-site">
+<script>
+  if (localStorage.getItem("notes-theme") === "dark" || (!localStorage.getItem("notes-theme") && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+    document.body.classList.add("dark");
+  }
+</script>
+<header class="notes-header" id="top">
+  <nav class="notes-nav">
+    <div class="notes-logo">
+      <a href="/blog/" title="Eric's Blog">Eric's Blog</a>
+      <button id="notes-theme-toggle" type="button" title="Toggle theme" aria-label="Toggle theme">
+        <span class="notes-moon">☾</span><span class="notes-sun">☀</span>
+      </button>
     </div>
+    <ul class="notes-menu">
+      <li><a href="/blog/" class="active">Posts</a></li>
+      <li><a href="/blog/archives/" class="">Archive</a></li>
+      <li><a href="/blog/collections/" class="">Collections</a></li>
+      <li><a href="/blog/search/" class="">Search</a></li>
+      <li><a href="/blog/tags/" class="">Tags</a></li>
+      <li><a href="/" class="">Home</a></li>
+    </ul>
   </nav>
-<main>
-<div class="section pt-5 page-hero-wall">
-  <div class="container is-max-desktop px-5">
-    <div class="content" style="max-width: 90%; margin: 0 auto;">
-      <h1 class="title is-2 mb-5">Blog</h1>
-      <p>Blog posts will be added later. Research notes now live in <a href="/notes/">Notes</a>.</p>
-    </div>
+</header>
+<main class="notes-main">
+<article class="notes-home-info">
+  <div>
+    <header class="notes-entry-header"><h1><span class="notes-wave" aria-hidden="true">👋</span>Welcome to Eric's Blog</h1></header>
+    <section class="notes-entry-content">
+      <p>I document research notes and blog posts on statistics, machine learning theory, large language models, reinforcement learning, causal inference, and off-policy evaluation.</p>
+    </section>
+    <footer class="notes-social-icons">
+      <a href="mailto:lizongxu65@gmail.com" title="Email" aria-label="Email"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v16H4z"></path><path d="m22 6-10 7L2 6"></path></svg></a>
+      <a href="https://scholar.google.com/" target="_blank" rel="noopener noreferrer me" title="Google Scholar" aria-label="Google Scholar"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a>
+      <a href="https://github.com/eric-statis" target="_blank" rel="noopener noreferrer me" title="GitHub" aria-label="GitHub"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a>
+      <a href="https://orcid.org/0009-0007-1129-5202" target="_blank" rel="noopener noreferrer me" title="ORCID" aria-label="ORCID"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M9 17V9"></path><path d="M9 6.8v.1"></path><path d="M12.5 17V7h2.2a4.1 4.1 0 0 1 0 8.2h-2.2"></path></svg></a>
+    </footer>
   </div>
-</div>
+</article>
+<article class="notes-post-entry">
+  <a class="notes-entry-link" href="/blog/posts/mlp-permutation-symmetry/" aria-label="Read 单隐藏层 MLP 的权重空间置换对称性"></a>
+  <header class="notes-entry-header"><h2>单隐藏层 MLP 的权重空间置换对称性</h2></header>
+  <section class="notes-entry-content"><p>证明单隐藏层 MLP 至少存在 d! 个损失值完全相同的等价解，即权重空间的置换对称性。</p></section>
+  <footer class="notes-entry-footer">Date: Jun 7, 2026 | Estimated Reading Time: 1 min | Author: Eric Li</footer>
+</article>
+
+<article class="notes-post-entry">
+  <a class="notes-entry-link" href="/blog/posts/gpt-series/" aria-label="Read OpenAI GPT 系列技术演进史 (2018 - 2026)"></a>
+  <header class="notes-entry-header"><h2>OpenAI GPT 系列技术演进史 (2018 - 2026)</h2></header>
+  <section class="notes-entry-content"><p>一篇整理 OpenAI GPT 系列模型从 GPT 1 到推理/智能体阶段的技术演进笔记。</p></section>
+  <footer class="notes-entry-footer">Date: Jun 6, 2026 | Estimated Reading Time: 2 min | Author: Eric Li</footer>
+</article>
+
+<article class="notes-post-entry">
+  <a class="notes-entry-link" href="/blog/posts/model-memory-training-inference-summary/" aria-label="Read 模型训练与推理显存计算总结"></a>
+  <header class="notes-entry-header"><h2>模型训练与推理显存计算总结</h2></header>
+  <section class="notes-entry-content"><p>一份关于模型权重、梯度、Adam 状态、activation、KV cache、LoRA/QLoRA 显存估算的研究笔记。</p></section>
+  <footer class="notes-entry-footer">Date: Jun 6, 2026 | Estimated Reading Time: 9 min | Author: Eric Li</footer>
+</article>
 </main>
-<footer class="footer">
-  <div class="container" style="max-width: 900px; margin: 0 auto;">
-    <div class="content has-text-centered">
-      <p>© 2026 Eric Li. Created & maintained with Jekyll and Bulma.<br>
-      The website content is licensed <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY NC SA 4.0</a>.</p>
-    </div>
-  </div>
+<footer class="notes-footer">
+  <span>© 2026 <a href="/blog/">Eric's Blog</a></span>
+  <span>Built as a minimal research notebook.</span>
 </footer>
+<a href="#top" class="notes-top-link" aria-label="Go to top">▲</a>
 <script src="/assets/js/main.js"></script>
 
 </body>

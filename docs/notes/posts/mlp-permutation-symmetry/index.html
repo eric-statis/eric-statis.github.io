@@ -3,83 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>单隐藏层 MLP 的权重空间置换对称性 - Eric's Notes</title>
-  <meta name="description" content="证明单隐藏层 MLP 至少存在 d! 个损失值完全相同的等价解，即权重空间的置换对称性。">
-  <meta name="author" content="Eric Li">
-  <meta name="robots" content="index, follow">
-  <link rel="stylesheet" href="/assets/css/main.css">
-  <link rel="stylesheet" href="/assets/css/notes.css?v=20260608-1">
-  <script>
-    window.MathJax = {
-      tex: {
-        inlineMath: [['$', '$'], ['\\(', '\\)']],
-        displayMath: [['$$', '$$'], ['\\[', '\\]']],
-        processEscapes: true
-      },
-      svg: { fontCache: 'global' }
-    };
-  </script>
-  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <meta http-equiv="refresh" content="0; url=/blog/posts/mlp-permutation-symmetry/">
+  <link rel="canonical" href="/blog/posts/mlp-permutation-symmetry/">
+  <title>Redirecting - Eric Li</title>
 </head>
-<body class="notes-site">
-<script>
-  if (localStorage.getItem("notes-theme") === "dark" || (!localStorage.getItem("notes-theme") && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
-    document.body.classList.add("dark");
-  }
-</script>
-<header class="notes-header" id="top">
-  <nav class="notes-nav">
-    <div class="notes-logo">
-      <a href="/notes/" title="Eric's Notes">Eric's Notes</a>
-      <button id="notes-theme-toggle" type="button" title="Toggle theme" aria-label="Toggle theme">
-        <span class="notes-moon">☾</span><span class="notes-sun">☀</span>
-      </button>
-    </div>
-    <ul class="notes-menu">
-      <li><a href="/notes/" class="active">Posts</a></li>
-      <li><a href="/notes/archives/" class="">Archive</a></li>
-      <li><a href="/notes/collections/" class="">Collections</a></li>
-      <li><a href="/notes/search/" class="">Search</a></li>
-      <li><a href="/notes/tags/" class="">Tags</a></li>
-      <li><a href="/" class="">Home</a></li>
-    </ul>
-  </nav>
-</header>
-<main class="notes-main">
-<article class="notes-article">
-  <header class="notes-post-header">
-    <h1>单隐藏层 MLP 的权重空间置换对称性</h1>
-    <p>Date: Jun 7, 2026 | Estimated Reading Time: 1 min | Author: Eric Li</p>
-  </header>
-  <section class="notes-article-content">
-    <h2>单隐藏层 MLP 的 $d!$ 等价解</h2>
-
-<p><strong>命题</strong>：一个隐藏层维度为 $d$、单输出的 MLP，对任意局部最小值，至少存在 $d!$ 个损失函数值完全相同的等价解。</p>
-
-<p><strong>证明</strong>：</p>
-
-<p>隐藏层的计算为 $h = \sigma(W_1 x + b_1)$，输出为 $\hat{y} = w_2^\top h + b_2$。</p>
-
-<p>对隐藏层神经元的序号做任意排列（permutation），同时对应调整权重矩阵的行/列顺序：</p>
-
-<p>$$W_1' = P W_1,\quad b_1' = P b_1,\quad w_2' = P w_2$$</p>
-
-<p>其中 $P$ 是 $d \times d$ 的置换矩阵。由于 $P^\top P = I$：</p>
-
-<p>$$\hat{y}' = (P w_2)^\top \sigma(P W_1 x + P b_1) + b_2 = w_2^\top P^\top \sigma(P z)$$</p>
-
-<p>如果激活函数 $\sigma$ 是逐元素操作，则 $\sigma(P z) = P \sigma(z)$，于是 $\hat{y}' = w_2^\top P^\top P \sigma(z) = \hat{y}$。</p>
-
-<p>$d$ 个神经元有 $d!$ 种排列方式，每种对应一组不同的参数值但输出完全相同，因此损失值也完全相同。这就是<strong>权重空间的置换对称性</strong>。</p>
-  </section>
-</article>
-</main>
-<footer class="notes-footer">
-  <span>© 2026 <a href="/notes/">Eric's Notes</a></span>
-  <span>Built as a minimal research notebook.</span>
-</footer>
-<a href="#top" class="notes-top-link" aria-label="Go to top">▲</a>
-<script src="/assets/js/main.js"></script>
-
+<body>
+  <p>Redirecting to <a href="/blog/posts/mlp-permutation-symmetry/">/blog/posts/mlp-permutation-symmetry/</a>.</p>
 </body>
 </html>
