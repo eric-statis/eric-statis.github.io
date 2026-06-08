@@ -39,6 +39,13 @@
         "source": "Hung-yi Lee (NTU)",
         "added": "2026-06-07",
         "tags": ["reinforcement-learning", "deep-learning", "course"]
+      },
+      {
+        "title": "Deep RL Course — Unit 3: Deep Q-Algorithm",
+        "url": "https://huggingface.co/learn/deep-rl-course/en/unit3/deep-q-algorithm",
+        "source": "Hugging Face",
+        "added": "2026-06-08",
+        "tags": ["reinforcement-learning", "deep-q-learning", "dqn", "course"]
       }
     ]
   },
